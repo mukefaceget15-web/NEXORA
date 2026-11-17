@@ -1,55 +1,325 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#080613">
-  <title>NEXORA — Next Generation Mining</title>
-  <link rel="stylesheet" href="/style.css">
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080613">
+<title>NEXORA — Next Generation Mining</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tonconnect/ui@2.0.9/dist/tonconnect-ui.min.js"></script>
+<style>
+:root{--bg:#080613;--s1:#120e26;--s2:#1b1538;--line:#2d2457;--tx:#f1eeff;--mu:#9a92c4;--v:#8b5cff;--c:#27e0ff;--g:#3dffb0;--r:#ff5c8a;
+--hf:'Unbounded',system-ui,sans-serif;--bf:'Manrope',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--tx);font-family:var(--bf);font-size:15px;line-height:1.45}
+body{min-height:100vh;background:
+radial-gradient(60% 40% at 80% -5%,#4a22b366,transparent 70%),
+radial-gradient(50% 35% at -10% 30%,#0e6a8a44,transparent 70%),var(--bg);
+padding:env(safe-area-inset-top,0) 0 0}
+body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(#000,transparent 60%);-webkit-mask-image:linear-gradient(#000,transparent 60%);pointer-events:none}
+.app{position:relative;max-width:520px;margin:0 auto;padding:14px 16px calc(96px + env(safe-area-inset-bottom,0))}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.brand{display:flex;gap:10px;align-items:center}
+.mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font:800 18px var(--hf);background:linear-gradient(135deg,var(--v),var(--c));color:#07041a;box-shadow:0 0 24px #8b5cff66}
+.brand b{font:700 16px var(--hf);letter-spacing:.06em;display:block}
+.brand small{color:var(--mu);font-size:10px;letter-spacing:.14em}
+.av{width:38px;height:38px;border-radius:50%;background:var(--s2);border:1px solid var(--line);display:grid;place-items:center;font-weight:700;overflow:hidden}
+.av img{width:100%;height:100%;object-fit:cover}
+.view{display:none;animation:in .25s ease}.view.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.panel{background:linear-gradient(180deg,var(--s2),var(--s1));border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:14px}
+h2{font:700 15px var(--hf);margin-bottom:12px}
+.mu{color:var(--mu)}.tiny{font-size:12px}
+.pill{display:inline-flex;gap:6px;align-items:center;padding:5px 11px;border-radius:99px;background:#8b5cff22;border:1px solid #8b5cff66;font-size:12px;font-weight:700}
+.live{display:inline-flex;gap:6px;align-items:center;font-size:11px;color:var(--g)}
+.live i{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g)}
+.hero{text-align:center;padding-top:16px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.bal{font:800 34px var(--hf);margin:6px 0 2px;letter-spacing:-.02em}
+.bal em{font-style:normal;font-size:14px;color:var(--c);margin-left:4px}
+/* miner core: the memorable element */
+.core{position:relative;width:210px;height:210px;margin:10px auto 6px}
+.core svg{position:absolute;inset:0;width:100%;height:100%}
+.r1{transform-origin:105px 105px;animation:spin 14s linear infinite}
+.r2{transform-origin:105px 105px;animation:spin 22s linear infinite reverse}
+.off .r1,.off .r2{animation-play-state:paused;opacity:.45}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hub{position:absolute;inset:50px;border-radius:50%;display:grid;place-items:center;font:800 54px var(--hf);background:radial-gradient(circle at 35% 30%,#b49bff,var(--v) 45%,#2a1478);box-shadow:0 0 50px #8b5cff88,inset 0 0 20px #ffffff33}
+.on-glow .hub{animation:pulse 2.2s ease-in-out infinite}
+.off .hub{filter:grayscale(.8) brightness(.6);box-shadow:none}
+@keyframes pulse{50%{box-shadow:0 0 80px #27e0ffaa,inset 0 0 20px #ffffff55}}
+.rate{display:inline-block;margin-top:4px;padding:6px 14px;border-radius:99px;background:#27e0ff14;border:1px solid #27e0ff44;color:var(--c);font-weight:700;font-size:13px}
+.btn{width:100%;padding:15px;border-radius:16px;font:700 13px var(--hf);letter-spacing:.04em;background:linear-gradient(90deg,var(--v),#5b6bff 55%,var(--c));color:#07041a;margin-top:14px;box-shadow:0 8px 28px #8b5cff55;transition:transform .12s}
+.btn:active{transform:scale(.98)}.btn[disabled]{opacity:.5;box-shadow:none}
+.btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--v);box-shadow:none}
+.sm{padding:8px 14px;border-radius:12px;background:var(--v);font-weight:700;font-size:13px;color:#fff}
+.sm[disabled]{background:var(--s2);color:var(--mu)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat{background:var(--s1);border:1px solid var(--line);border-radius:16px;padding:12px;text-align:center}
+.stat b{display:block;font:700 16px var(--hf)}.stat small{color:var(--mu);font-size:11px}
+.task{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.task:first-of-type{border-top:0}
+.ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#8b5cff22;color:var(--v);font-size:18px;flex:none}
+.task div:nth-child(2){flex:1}.task b{display:block}.task small{color:var(--mu)}
+.ok{color:var(--g);font-weight:800;font-size:20px}
+input[type=number],input[type=text]{width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--tx);font:600 16px var(--bf)}
+.chips{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.chip{padding:8px 14px;border-radius:99px;border:1px solid var(--line);background:var(--s1);font-weight:700;font-size:13px}
+.chip:hover{border-color:var(--c)}
+.pv{margin-top:10px;padding:12px;border-radius:14px;background:#3dffb012;border:1px solid #3dffb044;color:var(--g);font-weight:700;text-align:center}
+.me{display:flex;gap:14px;align-items:center}
+.me .av{width:68px;height:68px;font:800 26px var(--hf)}
+.me h3{font:700 17px var(--hf)}
+.link{display:flex;gap:8px;margin-top:10px}
+.link input{font-size:13px}
+.hist{margin-top:8px;font-size:13px}
+.hist div{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line)}
+.tag{color:#ffd166;font-weight:700}
+nav{position:fixed;left:0;right:0;bottom:0;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0));background:#0b0820ee;backdrop-filter:blur(14px);border-top:1px solid var(--line);z-index:20}
+nav div{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+nav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 0;border-radius:14px;color:var(--mu);font-size:11px;font-weight:700}
+nav button span{font-size:19px}
+nav button.on{color:var(--tx);background:#8b5cff2b}nav button.on span{color:var(--c)}
+.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0));transform:translate(-50%,-90px);background:var(--s2);border:1px solid var(--v);padding:11px 18px;border-radius:14px;font-weight:700;z-index:50;transition:transform .3s;max-width:90%;text-align:center}
+.toast.show{transform:translate(-50%,0)}
+.modal{position:fixed;inset:0;background:#05030ad9;display:none;place-items:center;z-index:40;padding:24px}
+.modal.show{display:grid}
+.modal .panel{width:100%;max-width:340px;text-align:center}
+.bar{height:8px;border-radius:9px;background:var(--bg);overflow:hidden;margin-top:14px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--v),var(--c))}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
-  <div class="app-shell">
-    <header class="topbar">
-      <div class="brand"><div class="brand-mark">N</div><div><strong>NEXORA</strong><small>NEXT GENERATION MINING</small></div></div>
-      <div class="avatar" id="avatar">N</div>
-    </header>
+<div class="app">
+  <header class="top">
+    <div class="brand"><div class="mark">N</div><div><b>NEXORA</b><small>NEXT GENERATION MINING</small></div></div>
+    <button class="av" id="topAv" data-go="profile" aria-label="Profile">N</button>
+  </header>
 
-    <section class="hero panel">
-      <div class="hero-top"><span class="pill">♛ LEVEL 1</span><span class="live"><i></i> SYSTEM ONLINE</span></div>
-      <div class="coin-orbit"><div class="coin">N</div></div>
-      <p class="eyebrow">YOUR NEX BALANCE</p>
-      <div class="balance"><span id="balance">0.0000</span> <em>NEX</em></div>
-      <div class="rate">⚡ <b>320 NEX / DAY</b> <span>· Level 1</span></div>
-    </section>
+  <!-- HOME -->
+  <section class="view on" id="v-home">
+    <div class="panel hero" id="heroPanel">
+      <div class="row"><span class="pill" id="lvl">♛ LEVEL 1</span><span class="live"><i></i> SYSTEM ONLINE</span></div>
+      <div class="core off" id="core">
+        <svg viewBox="0 0 210 210" fill="none">
+          <circle cx="105" cy="105" r="100" stroke="#2d2457" stroke-width="1"/>
+          <g class="r1"><circle cx="105" cy="105" r="92" stroke="url(#g1)" stroke-width="3" stroke-dasharray="3 9" stroke-linecap="round"/></g>
+          <g class="r2"><circle cx="105" cy="105" r="78" stroke="url(#g2)" stroke-width="5" stroke-dasharray="90 40 20 40"/></g>
+          <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8b5cff"/><stop offset="1" stop-color="#27e0ff"/></linearGradient>
+          <linearGradient id="g2" x1="1" y1="0" x2="0" y2="1"><stop stop-color="#27e0ff"/><stop offset="1" stop-color="#8b5cff"/></linearGradient></defs>
+        </svg>
+        <div class="hub">N</div>
+      </div>
+      <p class="mu tiny">Your NEX balance</p>
+      <div class="bal"><span id="bal">0.0000</span><em>NEX</em></div>
+      <div class="rate">⚡ <span id="rate">320</span> NEX / day</div>
+      <h2 id="mState" style="margin-top:18px">Miner not active</h2>
+      <p class="mu tiny" id="mHint">Pay 0.1 GRAM once to start mining and unlock referral rewards.</p>
+      <button class="btn" id="actBtn">ACTIVATE MINER</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="sDay">0</b><small>per day</small></div>
+      <div class="stat"><b id="sHr">0</b><small>per hour</small></div>
+      <div class="stat"><b id="sRef">0</b><small>active friends</small></div>
+    </div>
+    <div class="panel row"><div><h2 style="margin:0 0 4px">Want a faster miner?</h2><p class="mu tiny">Spend NEX to raise your speed.</p></div><button class="sm" data-go="boost">Boost</button></div>
+  </section>
 
-    <section class="miner panel">
-      <div class="miner-copy"><p class="eyebrow">MINING STATUS</p><h2 id="miningState">NOT ACTIVE</h2><div class="big-rate">320 <small>NEX / DAY</small></div><p class="muted" id="minerHint">Activate your miner to start earning.</p></div>
-      <div class="miner-core"><div class="core-ring">N</div></div>
-      <button class="primary" id="activateBtn">ACTIVATE MINER</button>
-      <p class="tiny muted">Activation requires a verified 0.1 GRAM payment.</p>
-    </section>
+  <!-- TASKS -->
+  <section class="view" id="v-tasks">
+    <div class="panel"><h2>Watch &amp; earn</h2>
+      <div class="task"><div class="ico">▶</div><div><b>Watch an ad</b><small id="adInfo">+50 NEX · 0/5 today</small></div><button class="sm" id="adBtn">Start</button></div>
+    </div>
+    <div class="panel"><h2>Join our channels</h2>
+      <div class="task"><div class="ico">➤</div><div><b>Channel 1</b><small>+100 NEX</small></div><button class="sm" data-ch="0" id="ch0">Join</button></div>
+      <div class="task"><div class="ico">➤</div><div><b>Channel 2</b><small>+100 NEX</small></div><button class="sm" data-ch="1" id="ch1">Join</button></div>
+    </div>
+  </section>
 
-    <nav class="quick-grid">
-      <button class="quick" data-tab="wallet"><span>◈</span>Wallet</button>
-      <button class="quick" data-tab="invite"><span>♧</span>Invite</button>
-      <button class="quick" data-tab="tasks"><span>▤</span>Tasks</button>
-      <button class="quick" data-tab="boost"><span>↗</span>Boost</button>
-      <button class="quick" data-tab="profile"><span>◎</span>Profile</button>
-    </nav>
+  <!-- BOOST -->
+  <section class="view" id="v-boost">
+    <div class="panel hero"><p class="mu tiny">Current speed</p><div class="bal"><span id="bSpeed">320</span><em>NEX/day</em></div>
+      <p class="mu tiny">Every 1,000 NEX you spend adds +<span id="per1k"></span> NEX/day, for good.</p></div>
+    <div class="panel"><h2>Buy speed</h2>
+      <input type="number" id="bAmt" inputmode="decimal" placeholder="Amount of NEX to spend" min="0">
+      <div class="chips"><button class="chip" data-a="500">500</button><button class="chip" data-a="1000">1,000</button><button class="chip" data-a="5000">5,000</button><button class="chip" data-a="10000">10,000</button><button class="chip" data-a="max">Max</button></div>
+      <div class="pv" id="bPv">Enter an amount</div>
+      <button class="btn" id="bBuy">BUY BOOST</button></div>
+  </section>
 
-    <section class="content-grid">
-      <article class="panel card"><div class="section-head"><h3>Tasks</h3><a href="#tasks" data-tab="tasks">View all ↗</a></div>
-        <div class="task-row"><span class="task-icon">▶</span><div><b>Watch an ad</b><small>Reward: +50 NEX</small></div><button class="small-btn" data-task="watch-ad">Start</button></div>
-        <div class="task-row"><span class="task-icon">➤</span><div><b>Join channel 1</b><small>Reward: +100 NEX</small></div><span class="check">✓</span></div>
-        <div class="task-row"><span class="task-icon">➤</span><div><b>Join channel 2</b><small>Reward: +100 NEX</small></div><span class="check">✓</span></div>
-      </article>
-      <article class="panel card"><div class="section-head"><h3>Wallet</h3></div><p class="muted">Connect a TON wallet to manage your assets.</p><button class="outline-btn" data-tab="wallet">Connect TON wallet</button></article>
-    </section>
+  <!-- WALLET -->
+  <section class="view" id="v-wallet">
+    <div class="panel"><h2>Connect wallet</h2>
+      <p class="mu tiny" style="margin-bottom:12px">Tonkeeper, Tonhub, MyTonWallet and other TON wallets are supported.</p>
+      <div id="tcRoot"></div>
+      <p class="tiny" style="margin-top:10px" id="wAddr">No wallet connected.</p></div>
+    <div class="panel"><h2>Miner activation</h2>
+      <p class="mu tiny">A one-time payment of <b style="color:var(--tx)">0.1 GRAM</b> turns on your miner and makes you count as an active friend for whoever invited you.</p>
+      <button class="btn" id="payBtn">PAY 0.1 GRAM</button></div>
+    <div class="panel"><h2>Withdraw</h2>
+      <p class="mu tiny" style="margin-bottom:10px">Available: <b id="wAvail" style="color:var(--tx)">0</b> NEX · minimum <span id="wMin"></span></p>
+      <input type="number" id="wAmt" inputmode="decimal" placeholder="Amount of NEX">
+      <button class="btn ghost" id="wBtn">REQUEST WITHDRAWAL</button>
+      <div class="hist" id="wHist"></div></div>
+  </section>
 
-    <section class="panel invite-banner"><div><p class="eyebrow">GROW THE NEXORA COMMUNITY</p><h3>Invite friends & earn more</h3><p class="muted">Your referral rewards will appear here.</p></div><button class="small-btn" data-tab="invite">Invite ↗</button></section>
+  <!-- PROFILE -->
+  <section class="view" id="v-profile">
+    <div class="panel me"><div class="av" id="pAv">N</div><div><h3 id="pName">Miner</h3><p class="mu tiny" id="pUser"></p><p class="tiny" style="margin-top:4px">ID <span id="pId">—</span></p></div></div>
+    <div class="stats">
+      <div class="stat"><b id="pLvl">1</b><small>level</small></div>
+      <div class="stat"><b id="pSpd">320</b><small>NEX/day</small></div>
+      <div class="stat"><b id="pRef">0</b><small>friends</small></div>
+    </div>
+    <div class="panel"><h2>Invite friends</h2>
+      <p class="mu tiny">Earn <b style="color:var(--g)">+<span id="refBonus"></span> NEX</b> for every friend who activates their miner. Friends count after their 0.1 GRAM payment.</p>
+      <div class="link"><input type="text" id="refLink" readonly><button class="sm" id="cpBtn">Copy</button></div>
+      <button class="btn" id="shBtn">SHARE INVITE</button></div>
+  </section>
+</div>
 
-    <section id="detail" class="panel detail hidden"></section>
-    <footer> NEXORA <span>•</span> Community-powered rewards</footer>
-  </div>
-  <script src="/app.js"></script>
-</body></html>
+<nav><div>
+  <button data-go="home" class="on"><span>⬡</span>Mine</button>
+  <button data-go="tasks"><span>✦</span>Tasks</button>
+  <button data-go="boost"><span>⚡</span>Boost</button>
+  <button data-go="wallet"><span>◈</span>Wallet</button>
+  <button data-go="profile"><span>◎</span>Profile</button>
+</div></nav>
+
+<div class="modal" id="adModal"><div class="panel"><h2>Ad playing</h2><p class="mu tiny">Stay on this screen to get your reward.</p><div class="bar"><i id="adBar"></i></div><p class="tiny" style="margin-top:10px" id="adSec">10s</p></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== CONFIG: edit these ===== */
+const CFG = {
+  BOT: 'YOUR_BOT_USERNAME',          // bot username without @
+  PAY_ADDRESS: '',                   // your TON address that receives the 0.1 payment (empty = demo mode)
+  PAY_NANO: '100000000',             // 0.1 in 9-decimals units
+  BASE_RATE: 320,                    // NEX/day at level 1
+  BOOST_PER_1K: 100,                 // +NEX/day for every 1,000 NEX spent
+  REF_BONUS: 500,
+  MIN_WITHDRAW: 5000,
+  AD_REWARD: 50, AD_LIMIT: 5, AD_SECONDS: 10,
+  CHANNELS: [{url:'https://t.me/your_channel_1', reward:100},{url:'https://t.me/your_channel_2', reward:100}],
+  API: ''                            // your Worker URL for real sync/verification (see notes)
+};
+/* ================================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const tg = window.Telegram && Telegram.WebApp;
+if(tg){try{tg.ready();tg.expand();tg.setHeaderColor('#080613');tg.setBackgroundColor('#080613')}catch(e){}}
+const user = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {id:'demo',first_name:'Miner'};
+const KEY='nexora_'+user.id;
+let S={bal:0,last:Date.now(),active:false,spent:0,refs:0,ads:0,adDay:'',ch:[0,0],chT:[0,0],wd:[]};
+try{const x=localStorage.getItem(KEY);if(x)S=Object.assign(S,JSON.parse(x))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const fmt=(n,d=0)=>Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const rate=()=>CFG.BASE_RATE+S.spent/1000*CFG.BOOST_PER_1K;
+const live=()=>S.bal+(S.active?(Date.now()-S.last)/864e5*rate():0);
+const level=()=>1+Math.floor(S.spent/5000);
+function checkpoint(){S.bal=live();S.last=Date.now()}
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2600);try{tg&&tg.HapticFeedback.notificationOccurred('success')}catch(e){}}
+
+/* navigation */
+function go(id){$$('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+id));$$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===id));scrollTo(0,0);draw()}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go(b.dataset.go)});
+
+/* profile from Telegram */
+const name=[user.first_name,user.last_name].filter(Boolean).join(' ')||'Miner';
+function avatar(el){el.innerHTML=user.photo_url?`<img src="${user.photo_url}" alt="">`:'';if(!user.photo_url)el.textContent=name[0].toUpperCase()}
+avatar($('#topAv'));avatar($('#pAv'));
+$('#pName').textContent=name;$('#pUser').textContent=user.username?'@'+user.username:'';$('#pId').textContent=user.id;
+const refLink=`https://t.me/${CFG.BOT}?startapp=ref_${user.id}`;
+$('#refLink').value=refLink;$('#refBonus').textContent=fmt(CFG.REF_BONUS);$('#wMin').textContent=fmt(CFG.MIN_WITHDRAW)+' NEX';$('#per1k').textContent=fmt(CFG.BOOST_PER_1K);
+$('#cpBtn').onclick=async()=>{try{await navigator.clipboard.writeText(refLink)}catch(e){$('#refLink').select();document.execCommand('copy')}toast('Invite link copied')};
+$('#shBtn').onclick=()=>{const u='https://t.me/share/url?url='+encodeURIComponent(refLink)+'&text='+encodeURIComponent('Mine NEX with me on NEXORA ⚡');tg?tg.openTelegramLink(u):open(u,'_blank')};
+
+/* TON wallet */
+let tc=null,wallet=null;
+try{
+  tc=new TON_CONNECT_UI.TonConnectUI({manifestUrl:location.origin+'/tonconnect-manifest.json',buttonRootId:'tcRoot'});
+  tc.onStatusChange(w=>{wallet=w;const a=w&&w.account&&w.account.address;$('#wAddr').textContent=a?'Connected: '+a.slice(0,6)+'…'+a.slice(-6):'No wallet connected.';draw()});
+}catch(e){$('#tcRoot').innerHTML='<p class="tiny" style="color:var(--r)">Wallet module failed to load. Check your connection.</p>'}
+
+/* activation payment */
+async function activate(){
+  if(S.active)return toast('Miner already active');
+  if(!wallet){toast('Connect your wallet first');return go('wallet')}
+  try{
+    if(CFG.PAY_ADDRESS){
+      // NOTE: sends 0.1 in TON units. If GRAM is a jetton, build a jetton-transfer payload here instead.
+      await tc.sendTransaction({validUntil:Math.floor(Date.now()/1000)+300,messages:[{address:CFG.PAY_ADDRESS,amount:CFG.PAY_NANO}]});
+      // PRODUCTION: send the tx to your Worker (CFG.API) and verify it on-chain before activating.
+    }else if(!confirm('DEMO MODE: simulate the 0.1 GRAM payment?'))return;
+    checkpoint();S.active=true;S.last=Date.now();save();draw();toast('Miner activated ⚡');go('home');
+  }catch(e){toast('Payment cancelled')}
+}
+$('#actBtn').onclick=activate;$('#payBtn').onclick=activate;
+
+/* tasks */
+const today=()=>new Date().toISOString().slice(0,10);
+$('#adBtn').onclick=()=>{
+  if(S.adDay!==today()){S.adDay=today();S.ads=0}
+  if(S.ads>=CFG.AD_LIMIT)return toast('Daily ad limit reached');
+  let t=CFG.AD_SECONDS;const m=$('#adModal');m.classList.add('show');
+  const iv=setInterval(()=>{t--;$('#adSec').textContent=t+'s';$('#adBar').style.width=(100-t/CFG.AD_SECONDS*100)+'%';
+    if(t<=0){clearInterval(iv);m.classList.remove('show');$('#adBar').style.width='0';checkpoint();S.bal+=CFG.AD_REWARD;S.ads++;save();draw();toast('+'+CFG.AD_REWARD+' NEX')}},1000);
+  $('#adSec').textContent=t+'s';
+  // PRODUCTION: replace this timer with your ad network SDK (Adsgram, Monetag, etc.).
+};
+$$('[data-ch]').forEach(b=>b.onclick=()=>{
+  const i=+b.dataset.ch,c=CFG.CHANNELS[i];if(S.ch[i])return;
+  if(!S.chT[i]){S.chT[i]=Date.now();save();tg?tg.openTelegramLink(c.url):open(c.url,'_blank');return draw()}
+  if(Date.now()-S.chT[i]<6000)return toast('Join the channel, then tap Claim');
+  // PRODUCTION: verify with getChatMember through your Worker before rewarding.
+  checkpoint();S.bal+=c.reward;S.ch[i]=1;save();draw();toast('+'+c.reward+' NEX');
+});
+
+/* boost */
+const bAmt=$('#bAmt');
+$$('.chip').forEach(c=>c.onclick=()=>{bAmt.value=c.dataset.a==='max'?Math.floor(live()):c.dataset.a;draw()});
+bAmt.oninput=draw;
+$('#bBuy').onclick=()=>{
+  const a=+bAmt.value;if(!(a>0))return toast('Enter an amount');
+  if(a>live())return toast('Not enough NEX');
+  checkpoint();S.bal-=a;S.spent+=a;S.last=Date.now();save();bAmt.value='';draw();toast('Speed is now '+fmt(rate())+' NEX/day');
+};
+
+/* withdraw */
+$('#wBtn').onclick=()=>{
+  const a=+$('#wAmt').value;
+  if(!wallet)return toast('Connect your wallet first');
+  if(!S.active)return toast('Activate your miner first');
+  if(!(a>=CFG.MIN_WITHDRAW))return toast('Minimum is '+fmt(CFG.MIN_WITHDRAW)+' NEX');
+  if(a>live())return toast('Not enough NEX');
+  checkpoint();S.bal-=a;S.wd.unshift({a,t:Date.now(),s:'Pending'});save();$('#wAmt').value='';draw();toast('Withdrawal requested');
+  // PRODUCTION: POST to your Worker so the request is stored server-side and paid out.
+};
+
+/* render */
+function draw(){
+  const r=rate(),act=S.active;
+  $('#rate').textContent=fmt(r);$('#lvl').textContent='♛ LEVEL '+level();
+  $('#core').className='core '+(act?'on-glow':'off');
+  $('#mState').textContent=act?'Miner active':'Miner not active';
+  $('#mHint').textContent=act?'Mining in the background, even when the app is closed.':'Pay 0.1 GRAM once to start mining and unlock referral rewards.';
+  $('#actBtn').style.display=act?'none':'block';$('#payBtn').disabled=act;$('#payBtn').textContent=act?'MINER IS ACTIVE ✓':'PAY 0.1 GRAM';
+  $('#sDay').textContent=fmt(r);$('#sHr').textContent=fmt(r/24,1);$('#sRef').textContent=S.refs;
+  $('#bSpeed').textContent=fmt(r);$('#pLvl').textContent=level();$('#pSpd').textContent=fmt(r);$('#pRef').textContent=S.refs;
+  const a=+bAmt.value;$('#bPv').textContent=a>0?`+${fmt(a/1000*CFG.BOOST_PER_1K,1)} NEX/day → ${fmt(r+a/1000*CFG.BOOST_PER_1K)} NEX/day`:'Enter an amount';
+  if(S.adDay!==today()){S.adDay=today();S.ads=0}
+  $('#adInfo').textContent=`+${CFG.AD_REWARD} NEX · ${S.ads}/${CFG.AD_LIMIT} today`;
+  CFG.CHANNELS.forEach((c,i)=>{const b=$('#ch'+i);if(S.ch[i]){b.outerHTML=`<span class="ok" id="ch${i}">✓</span>`}else b.textContent=S.chT[i]?'Claim':'Join'});
+  $('#wHist').innerHTML=S.wd.slice(0,5).map(w=>`<div><span>${fmt(w.a)} NEX · ${new Date(w.t).toLocaleDateString()}</span><span class="tag">${w.s}</span></div>`).join('');
+}
+$$('[data-ch]').forEach(b=>0);
+setInterval(()=>{const v=live();$('#bal').textContent=fmt(v,4);$('#wAvail').textContent=fmt(v,2)},100);
+draw();
+</script>
+</body>
+</html>
