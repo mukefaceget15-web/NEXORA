@@ -1,0 +1,21 @@
+name = "nexora-miniapp"
+main = "src/index.js"
+compatibility_date = "2026-11-17"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "nexora-db"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[vars]
+APP_NAME = "NEXORA"
+MINING_DAILY_RATE = "320"
+# Set these as secrets with `wrangler secret put ...`, never commit real values:
+# TELEGRAM_BOT_TOKEN
+# TELEGRAM_WEBHOOK_SECRET
+# TONCENTER_API_KEY (only after choosing and implementing a verified payment method)
