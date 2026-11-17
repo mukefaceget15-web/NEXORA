@@ -10,7 +10,7 @@ not_found_handling = "single-page-application"
 [[d1_databases]]
 binding = "DB"
 database_name = "nexora-db"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "7d231ee9-c10d-4970-a01d-9bd6e8f3f6cf"
 
 [vars]
 APP_NAME = "NEXORA"
