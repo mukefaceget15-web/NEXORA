@@ -1,3 +1,4 @@
+7d231ee9-c10d-4970-a01d-9bd6e8f3f6cf
 name = "nexora-miniapp"
 main = "src/index.js"
 compatibility_date = "2026-11-17"
@@ -6,6 +7,7 @@ compatibility_date = "2026-11-17"
 directory = "./public"
 binding = "ASSETS"
 not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]
 
 [[d1_databases]]
 binding = "DB"
@@ -15,7 +17,6 @@ database_id = "7d231ee9-c10d-4970-a01d-9bd6e8f3f6cf"
 [vars]
 APP_NAME = "NEXORA"
 MINING_DAILY_RATE = "320"
-# Set these as secrets with `wrangler secret put ...`, never commit real values:
-# TELEGRAM_BOT_TOKEN
-# TELEGRAM_WEBHOOK_SECRET
-# TONCENTER_API_KEY (only after choosing and implementing a verified payment method)
+PAY_ADDRESS = "UQCgsuIkpTRmJUHHhqFtD9-2Ybi-5wLjXMaCkcIy8QVQYEn-"
+CHANNEL_1 = "@کانال_اول"
+CHANNEL_2 = "@کانال_دوم"
