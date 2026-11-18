@@ -6,112 +6,172 @@
 <meta name="theme-color" content="#05030f">
 <title>NEXORA — Next Generation Mining</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tonconnect/ui@2.0.9/dist/tonconnect-ui.min.js"></script>
 <style>
-:root{--bg:#05030f;--s1:#0f0b24;--s2:#181237;--ln:#2a2160;--tx:#f0edff;--mu:#948cc2;--v:#8b5cff;--c:#27e0ff;--g:#3dffb0;--y:#ffd166;--hf:'Unbounded',system-ui,sans-serif;--bf:'Manrope',system-ui,sans-serif}
+:root{--bg:#05030f;--s1:#0f0b24;--s2:#1a1340;--ln:#3b2f8a;--tx:#f0edff;--mu:#9d95cc;--v:#8b5cff;--c:#27e0ff;--g:#3dffb0;--y:#ffd166;--p:#ff5c8a;--hf:'Unbounded',system-ui,sans-serif;--bf:'Manrope',system-ui,sans-serif}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{background:var(--bg);color:var(--tx);font:15px/1.45 var(--bf)}
-body{min-height:100vh;background:radial-gradient(70% 38% at 85% -4%,#5b2bd066,transparent 70%),radial-gradient(55% 30% at -10% 35%,#0b6f9a44,transparent 70%),var(--bg);padding-top:env(safe-area-inset-top,0)}
-.app{max-width:520px;margin:0 auto;padding:14px 16px calc(110px + env(safe-area-inset-bottom,0))}
+body{min-height:100vh;padding-top:env(safe-area-inset-top,0);background:radial-gradient(80% 40% at 90% -5%,#6a35f066,transparent 70%),radial-gradient(60% 35% at -10% 40%,#0b86b044,transparent 70%),var(--bg)}
+#bg{position:fixed;inset:0;pointer-events:none;z-index:0}
+.app{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:12px 16px calc(116px + env(safe-area-inset-bottom,0))}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 button:focus-visible,input:focus-visible{outline:2px solid var(--c);outline-offset:2px}
-.view{display:none;animation:in .25s}.view.on{display:block}@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
-h1{font:800 22px var(--hf);margin:6px 0 4px}h2{font:700 14px var(--hf);margin-bottom:12px}
+.view{display:none}.view.on{display:block;animation:in .3s}@keyframes in{from{opacity:0;transform:translateY(10px) scale(.99)}}
+h1{font:800 24px var(--hf);margin:4px 0 12px;text-shadow:0 0 24px #8b5cff99}h2{font:700 14px var(--hf);margin-bottom:12px}
 .mu{color:var(--mu)}.tiny{font-size:12px}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.chip{display:inline-flex;gap:6px;align-items:center;padding:6px 12px;border-radius:99px;background:#8b5cff22;border:1px solid #8b5cff66;font-size:12px;font-weight:700}
-.chip.y{background:#ffd16620;border-color:#ffd16666;color:var(--y)}
-.live{font-size:11px;color:var(--g)}.live::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);margin-right:6px}
-.card{background:linear-gradient(160deg,var(--s2),var(--s1));border:1px solid var(--ln);border-radius:24px;padding:18px;margin-bottom:14px}
-.bank{position:relative;overflow:hidden;background:linear-gradient(135deg,#5a2fe0,#1a6bd6 60%,#10b6d6);border:0;text-align:left}
-.bank::after{content:"";position:absolute;right:-50px;top:-50px;width:180px;height:180px;border-radius:50%;background:radial-gradient(#fff3,transparent 70%)}
-.bank small{opacity:.8;font-weight:700;letter-spacing:.08em;font-size:11px}
-.big{font:800 34px var(--hf);margin:4px 0;letter-spacing:-.02em}.big em{font:700 14px var(--hf);font-style:normal;opacity:.85}
-.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.pair div{background:#0006;border-radius:16px;padding:10px 12px}.pair b{display:block;font:700 15px var(--hf)}.pair span{font-size:11px;opacity:.8}
-.core{position:relative;width:200px;height:200px;margin:6px auto 2px}
-.core svg,.core img{position:absolute}
-.core svg{inset:0;width:100%;height:100%}
-.core img{inset:48px;width:104px;height:104px;border-radius:50%;object-fit:cover;box-shadow:0 0 44px #8b5cffaa}
-.r1{transform-origin:100px 100px;animation:sp 14s linear infinite}.r2{transform-origin:100px 100px;animation:sp 22s linear infinite reverse}
-@keyframes sp{to{transform:rotate(360deg)}}
-.off .r1,.off .r2{animation-play-state:paused;opacity:.4}.off img{filter:grayscale(.9) brightness(.55);box-shadow:none}
-.btn{width:100%;padding:15px;border-radius:16px;font:700 13px var(--hf);background:linear-gradient(90deg,var(--v),#5b6bff 55%,var(--c));color:#07041a;margin-top:12px;box-shadow:0 8px 28px #8b5cff55}
-.btn.o{background:none;color:var(--tx);border:1px solid var(--v);box-shadow:none}.btn[disabled]{opacity:.5}
-.sm{padding:9px 16px;border-radius:12px;background:var(--v);font-weight:800;font-size:13px}.sm[disabled]{background:var(--s2);color:var(--mu)}
+.coin{width:1.15em;height:1.15em;vertical-align:-.2em;filter:drop-shadow(0 0 6px #27e0ffaa)}
+/* top bar */
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.who{display:flex;align-items:center;gap:10px}
+.av{width:44px;height:44px;border-radius:50%;background:var(--s2);display:grid;place-items:center;font:800 18px var(--hf);overflow:hidden;flex:none;border:2px solid var(--v);box-shadow:0 0 0 3px #8b5cff33,0 0 18px #8b5cff88}
+.av img{width:100%;height:100%;object-fit:cover}
+.who b{display:block;font-size:14px;line-height:1.1}.who small{color:var(--c);font-weight:800;font-size:11px;letter-spacing:.08em}
+.tb{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:99px;background:#0b0820cc;border:1px solid var(--ln);font:700 13px var(--hf);box-shadow:inset 0 1px 0 #fff1,0 0 20px #27e0ff22}
+/* cards & buttons */
+.card{position:relative;background:linear-gradient(160deg,#1d1647dd,#0e0a22dd);backdrop-filter:blur(8px);border:1px solid var(--ln);border-radius:26px;padding:18px;margin-bottom:14px;box-shadow:0 10px 30px #0009,inset 0 1px 0 #ffffff14}
+.bank{overflow:hidden;border:0;background:linear-gradient(135deg,#5b2be0,#1f6bf0 55%,#15c6e6);box-shadow:0 12px 34px #4a2bd677,inset 0 2px 0 #fff4}
+.bank::before{content:"";position:absolute;top:-50%;left:-60%;width:40%;height:200%;background:linear-gradient(90deg,transparent,#ffffff40,transparent);transform:rotate(18deg);animation:shine 5s infinite}
+@keyframes shine{0%,60%{left:-60%}100%{left:130%}}
+.bank small{font-weight:800;letter-spacing:.1em;font-size:11px;opacity:.85}
+.big{font:800 34px var(--hf);margin:4px 0;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}.big .coin{width:38px;height:38px}.big em{font:700 14px var(--hf);font-style:normal;opacity:.85}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.pair div{background:#00000055;border-radius:16px;padding:10px 12px;border:1px solid #ffffff1a}.pair b{display:block;font:700 15px var(--hf)}.pair span{font-size:11px;opacity:.8}
+.btn{position:relative;width:100%;padding:16px;border-radius:18px;font:800 13px var(--hf);letter-spacing:.05em;color:#06031a;margin-top:12px;background:linear-gradient(180deg,#a487ff,#6a4dff 55%,#27c8ff);box-shadow:0 5px 0 #3a22a8,0 14px 28px #6a4dff66,inset 0 2px 0 #fff7;transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #3a22a8,0 6px 14px #6a4dff66,inset 0 2px 0 #fff7}
+.btn.g{background:linear-gradient(180deg,#7dffd0,#1fd68f);box-shadow:0 5px 0 #0d8a5c,0 14px 28px #1fd68f55,inset 0 2px 0 #fff8}
+.btn.o{background:#ffffff0d;color:var(--tx);box-shadow:0 4px 0 #0008;border:1px solid var(--ln)}
+.btn.pulse{animation:bp 1.8s infinite}@keyframes bp{50%{filter:brightness(1.25)}}
+.btn[disabled]{filter:grayscale(.8) brightness(.6);box-shadow:0 3px 0 #000a;animation:none}
+.sm{padding:10px 18px;border-radius:14px;background:linear-gradient(180deg,#a487ff,#6a4dff);font-weight:800;font-size:13px;box-shadow:0 3px 0 #3a22a8,inset 0 1px 0 #fff6}.sm:active{transform:translateY(3px);box-shadow:none}.sm[disabled]{background:var(--s2);color:var(--mu);box-shadow:none}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;background:#8b5cff22;border:1px solid #8b5cff77;font-size:12px;font-weight:800}.chip.y{background:#ffd16622;border-color:#ffd16688;color:var(--y)}
 .row{display:flex;align-items:center;gap:12px}.row>div:nth-child(2){flex:1}
-.task{padding:13px 0;border-top:1px solid var(--ln)}.task:first-of-type{border-top:0}
-.ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:19px;background:#27e0ff1c;color:var(--c);flex:none}
-.rw{display:inline-block;margin-top:3px;padding:2px 9px;border-radius:99px;background:#ffd16620;color:var(--y);font:700 12px var(--hf)}
-.done{color:var(--g);font-weight:800;font-size:22px}
-input[type=number],input[type=text]{width:100%;padding:14px;border-radius:14px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);font:600 16px var(--bf)}
-.chips{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}.chips button{padding:8px 14px;border-radius:99px;border:1px solid var(--ln);background:var(--s1);font-weight:700;font-size:13px}
-.pv{margin-top:8px;padding:11px;border-radius:14px;background:#3dffb012;border:1px solid #3dffb044;color:var(--g);font-weight:700;text-align:center}
-.steps{display:flex;gap:6px;margin:8px 0 2px}.steps i{flex:1;height:6px;border-radius:9px;background:var(--ln)}.steps i.f{background:linear-gradient(90deg,var(--v),var(--c))}
-.hist div{display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid var(--ln);font-size:13px}.tag{color:var(--y);font-weight:700}
-.av{width:70px;height:70px;border-radius:50%;background:var(--s2);border:2px solid var(--v);display:grid;place-items:center;font:800 26px var(--hf);overflow:hidden;flex:none}.av img{width:100%;height:100%;object-fit:cover}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}.stats div{background:var(--s1);border:1px solid var(--ln);border-radius:18px;padding:12px;text-align:center}.stats b{display:block;font:700 16px var(--hf)}.stats small{color:var(--mu);font-size:11px}
-.link{display:flex;gap:8px;margin-top:10px}
-.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:14px 0}
-.day{aspect-ratio:1/1.3;border-radius:14px;background:var(--s1);border:1px solid var(--ln);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;color:var(--mu)}
-.day b{font:700 11px var(--hf);color:var(--tx)}.day.ok{border-color:var(--g);background:#3dffb014}.day.ok b{color:var(--g)}
-.day.now{border-color:var(--c);box-shadow:0 0 16px #27e0ff55}.day.last{background:linear-gradient(160deg,#ffd16630,#8b5cff30);border-color:var(--y)}
-.tk{display:flex;align-items:center;gap:12px;padding:14px;border-radius:20px;background:linear-gradient(160deg,var(--s2),var(--s1));border:1px solid var(--ln);margin-bottom:10px;box-shadow:0 4px 0 #0009}
-.tk>div:nth-child(2){flex:1}.ico.pink{background:#ff5c8a22;color:#ff5c8a}.ico.gold{background:#ffd16622;color:var(--y)}
+/* mine stage */
+.stage{position:relative;height:330px;margin:0 -16px 6px;overflow:hidden}
+.stage>svg.scene{position:absolute;inset:0;width:100%;height:100%}
+.reactor{position:absolute;left:50%;top:46%;width:210px;height:210px;transform:translate(-50%,-50%)}
+.reactor svg{position:absolute;inset:-14px;width:238px;height:238px}
+.reactor img{position:absolute;inset:44px;width:122px;height:122px;border-radius:50%;object-fit:cover;box-shadow:0 0 50px #8b5cffcc,0 0 100px #27e0ff66;animation:beat 2.4s ease-in-out infinite}
+@keyframes beat{50%{transform:scale(1.06);box-shadow:0 0 70px #8b5cff,0 0 130px #27e0ff99}}
+.r1{transform-origin:119px 119px;animation:sp 16s linear infinite}.r2{transform-origin:119px 119px;animation:sp 10s linear infinite reverse}.r3{transform-origin:119px 119px;animation:sp 24s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.off .r1,.off .r2,.off .r3,.off img{animation-play-state:paused}.off img{filter:grayscale(1) brightness(.45);box-shadow:none}.off svg{opacity:.5}
+.lock{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);font-size:34px;filter:drop-shadow(0 0 10px #000);display:none}.off~.lock{display:block}
+.ft{position:absolute;left:50%;top:60%;font:800 14px var(--hf);color:var(--g);text-shadow:0 0 12px #3dffb0;pointer-events:none;animation:fl 2.4s ease-out forwards;white-space:nowrap}
+@keyframes fl{from{opacity:0;transform:translate(-50%,0)}15%{opacity:1}to{opacity:0;transform:translate(-50%,-130px)}}
+.eq{display:flex;gap:4px;align-items:flex-end;height:22px;justify-content:center;margin-top:6px}.eq i{width:5px;border-radius:3px;background:linear-gradient(var(--c),var(--v));height:6px;animation:eq 1s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:.15s}.eq i:nth-child(3){animation-delay:.3s}.eq i:nth-child(4){animation-delay:.45s}.eq i:nth-child(5){animation-delay:.6s}
+@keyframes eq{50%{height:22px}}.eqoff i{animation-play-state:paused}
+.xp{height:12px;border-radius:99px;background:#000a;border:1px solid var(--ln);overflow:hidden;margin:8px 0 4px}.xp i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--v),var(--c),var(--g));box-shadow:0 0 14px var(--c);transition:width .6s}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.tile{background:linear-gradient(160deg,#1d1647,#0e0a22);border:1px solid var(--ln);border-radius:20px;padding:12px 8px;text-align:center;box-shadow:0 4px 0 #0009}.tile svg{width:26px;height:26px;margin-bottom:4px}.tile b{display:block;font:700 15px var(--hf)}.tile small{color:var(--mu);font-size:11px}
+/* tasks */
+.hero{display:flex;align-items:center;gap:14px;overflow:hidden}.hero svg{width:84px;height:84px;flex:none;filter:drop-shadow(0 0 14px #ffd16688)}
+.days{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+.day{border-radius:16px;padding:10px 4px;background:linear-gradient(160deg,#1d1647,#0e0a22);border:1px solid var(--ln);text-align:center;font-size:10px;color:var(--mu);box-shadow:0 3px 0 #0009}
+.day b{display:block;font:800 13px var(--hf);color:var(--tx);margin-top:2px}.day .coin{width:22px;height:22px;display:block;margin:2px auto}
+.day.ok{border-color:var(--g);background:linear-gradient(160deg,#0f4a3a,#0b2a2a)}.day.ok b{color:var(--g)}
+.day.now{border-color:var(--c);box-shadow:0 0 0 2px #27e0ff55,0 0 24px #27e0ff66;animation:bp 1.4s infinite}
+.day.last{grid-column:span 2;background:linear-gradient(160deg,#4a3a10,#2a1a50);border-color:var(--y)}.day.last svg{width:46px;height:46px}
+.tk{display:flex;align-items:center;gap:12px;padding:14px;border-radius:22px;background:linear-gradient(160deg,#1d1647dd,#0e0a22dd);border:1px solid var(--ln);margin-bottom:10px;box-shadow:0 4px 0 #0009}.tk>div:nth-child(2){flex:1}
+.ico{width:50px;height:50px;border-radius:16px;display:grid;place-items:center;flex:none;box-shadow:0 4px 0 #0008,inset 0 2px 0 #fff6}.ico svg{width:24px;height:24px}
+.ico.a{background:linear-gradient(180deg,#ff8ab0,#ff4f86)}.ico.b{background:linear-gradient(180deg,#6ee9ff,#1fa8ff)}
+.rw{display:inline-flex;align-items:center;gap:4px;margin-top:3px;padding:2px 10px;border-radius:99px;background:#ffd16622;color:var(--y);font:800 12px var(--hf)}
+.done{color:var(--g);font-weight:800;font-size:26px}
+/* boost */
+.gauge{text-align:center;position:relative}.gauge svg{width:230px;height:130px}.gauge .big{justify-content:center;margin-top:-52px;font-size:30px}
+.tiers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tier{border-radius:22px;padding:14px 10px;text-align:center;background:linear-gradient(160deg,#1d1647,#0e0a22);border:2px solid var(--ln);box-shadow:0 4px 0 #0009;transition:.15s}
+.tier.sel{border-color:var(--c);box-shadow:0 0 0 2px #27e0ff44,0 0 26px #27e0ff55}.tier svg{width:54px;height:54px}.tier b{display:block;font:800 13px var(--hf);margin-top:4px}.tier small{color:var(--g);font-weight:800;font-size:12px}.tier em{display:block;font-style:normal;font-size:11px;color:var(--mu)}
+input[type=number],input[type=text]{width:100%;padding:14px;border-radius:16px;border:1px solid var(--ln);background:#05030fcc;color:var(--tx);font:700 16px var(--bf)}
+.pv{margin-top:10px;padding:11px;border-radius:14px;background:#3dffb012;border:1px solid #3dffb055;color:var(--g);font-weight:800;text-align:center}
+/* wallet */
+.banner{display:flex;align-items:center;gap:12px}.banner svg{width:76px;height:76px;flex:none;filter:drop-shadow(0 0 16px #8b5cffaa)}
 .chk{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #ffffff14}.chk:first-of-type{border-top:0}
-.dot{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#ffffff14;font-size:14px;flex:none;color:var(--mu)}.dot.ok{background:var(--g);color:#052}
-.sm{box-shadow:0 3px 0 #4a2bb0}
-nav{position:fixed;left:0;right:0;bottom:0;padding:0 14px calc(10px + env(safe-area-inset-bottom,0));z-index:20;pointer-events:none}
-nav div{pointer-events:auto;max-width:492px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;background:#0d0922ee;backdrop-filter:blur(16px);border:1px solid var(--ln);border-radius:26px;padding:8px 6px}
-nav button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;color:var(--mu);font-size:11px;font-weight:700;border-radius:16px}nav span{font-size:20px}
-nav button.on{color:var(--c)}
-nav button.mid{margin-top:-26px}nav button.mid span{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--v),var(--c));color:#07041a;box-shadow:0 8px 24px #8b5cff88;font-size:24px}
-.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0));transform:translate(-50%,-90px);background:var(--s2);border:1px solid var(--v);padding:11px 18px;border-radius:14px;font-weight:700;z-index:50;transition:transform .3s;max-width:90%;text-align:center}.toast.show{transform:translate(-50%,0)}
-.modal{position:fixed;inset:0;background:#05030ae6;display:none;place-items:center;z-index:40;padding:24px}.modal.show{display:grid}.modal .card{width:100%;max-width:330px;text-align:center}
-.bar{height:8px;border-radius:9px;background:var(--bg);overflow:hidden;margin-top:14px}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--v),var(--c))}
-#gate{position:fixed;inset:0;background:var(--bg);display:none;place-items:center;text-align:center;padding:30px;z-index:60}
+.dot{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#ffffff14;font-size:15px;flex:none;color:var(--mu)}.dot.ok{background:linear-gradient(180deg,#7dffd0,#1fd68f);color:#052;box-shadow:0 0 14px #3dffb088}
+.hist div{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid #ffffff14;font-size:13px}.hist div:first-child{border-top:0}.tag{color:var(--y);font-weight:800}
+/* profile */
+.me{text-align:center}.me .av{width:92px;height:92px;margin:0 auto 10px;font-size:32px}.me h1{margin:4px 0 2px;font-size:20px}
+.lv{display:inline-block;margin-top:8px;padding:5px 14px;border-radius:99px;background:linear-gradient(90deg,var(--v),var(--c));color:#06031a;font:800 12px var(--hf)}
+.steps{display:flex;gap:8px;margin:12px 0}.steps div{flex:1;text-align:center;font-size:11px;color:var(--mu)}.steps b{display:grid;place-items:center;width:34px;height:34px;margin:0 auto 4px;border-radius:50%;background:linear-gradient(180deg,#a487ff,#6a4dff);color:#06031a;font:800 14px var(--hf)}
+.link{display:flex;gap:8px;margin-top:10px}
+/* nav */
+nav{position:fixed;left:0;right:0;bottom:0;padding:0 12px calc(10px + env(safe-area-inset-bottom,0));z-index:20;pointer-events:none}
+nav div{pointer-events:auto;max-width:496px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;background:#0b0820f0;backdrop-filter:blur(18px);border:1px solid var(--ln);border-radius:28px;padding:8px 6px;box-shadow:0 -6px 30px #8b5cff22,0 10px 30px #000a}
+nav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;color:var(--mu);font-size:11px;font-weight:800}nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--c)}nav button.on svg{filter:drop-shadow(0 0 8px var(--c))}
+nav button.mid{margin-top:-30px}nav button.mid svg{box-sizing:content-box;padding:15px;width:26px;height:26px;border-radius:50%;background:linear-gradient(180deg,#a487ff,#27c8ff);color:#06031a;stroke:#06031a;box-shadow:0 5px 0 #3a22a8,0 10px 26px #8b5cffaa}
+.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0));transform:translate(-50%,-100px);background:linear-gradient(160deg,var(--s2),var(--s1));border:1px solid var(--v);padding:12px 20px;border-radius:16px;font-weight:800;z-index:80;transition:transform .35s cubic-bezier(.3,1.4,.5,1);max-width:90%;text-align:center;box-shadow:0 10px 30px #000a}.toast.show{transform:translate(-50%,0)}
+.modal{position:fixed;inset:0;background:#05030af0;display:none;place-items:center;z-index:60;padding:24px}.modal.show{display:grid}.modal .card{width:100%;max-width:330px;text-align:center}
+.bar{height:10px;border-radius:9px;background:#000;overflow:hidden;margin-top:14px;border:1px solid var(--ln)}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--v),var(--c))}
+#gate{position:fixed;inset:0;background:var(--bg);display:none;place-items:center;text-align:center;padding:30px;z-index:90}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<canvas id="bg"></canvas>
+<svg width="0" height="0" style="position:absolute"><defs>
+<linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#27e0ff"/><stop offset="1" stop-color="#8b5cff"/></linearGradient>
+<linearGradient id="gg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffe9a0"/><stop offset="1" stop-color="#ff9d2e"/></linearGradient>
+<symbol id="coin" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="url(#cg)"/><circle cx="32" cy="32" r="23" fill="#0a0626"/><path d="M22 44V20h5l10 17V20h5v24h-5L27 27v17z" fill="#fff"/></symbol>
+<symbol id="chest" viewBox="0 0 64 64"><rect x="8" y="26" width="48" height="28" rx="6" fill="#6a3b10"/><path d="M8 32a24 20 0 0148 0v-6a6 6 0 00-6-6H14a6 6 0 00-6 6z" fill="url(#gg)"/><rect x="8" y="32" width="48" height="6" fill="#3b1e06"/><rect x="27" y="30" width="10" height="14" rx="3" fill="url(#gg)"/><circle cx="32" cy="37" r="2" fill="#3b1e06"/></symbol>
+</defs></svg>
 <div id="gate"><div><h1>NEXORA</h1><p class="mu">Please open this app from inside Telegram.</p></div></div>
+
 <div class="app">
-  <div class="top"><div><span class="chip" id="lvl">♛ LEVEL 1</span></div><span class="live">SYSTEM ONLINE</span></div>
+  <div class="top"><div class="who"><div class="av" id="topAv">N</div><div><b id="topName">Miner</b><small id="lvl">LEVEL 1</small></div></div>
+    <div class="tb"><svg class="coin"><use href="#coin"/></svg><span id="tbal">0</span></div></div>
 
   <section class="view on" id="v-mine">
-    <div class="card bank"><small>YOUR NEX BALANCE</small><div class="big"><span id="bal">0.0000</span> <em>NEX</em></div>
+    <div class="stage">
+      <svg class="scene" viewBox="0 0 360 330" preserveAspectRatio="xMidYMid slice"><defs>
+        <radialGradient id="glow" cx=".5" cy=".5" r=".5"><stop stop-color="#8b5cff" stop-opacity=".55"/><stop offset="1" stop-color="#8b5cff" stop-opacity="0"/></radialGradient>
+        <linearGradient id="cr1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#27e0ff"/><stop offset="1" stop-color="#4a2bd6"/></linearGradient>
+        <linearGradient id="cr2" x1="1" y1="0" x2="0" y2="1"><stop stop-color="#c9a8ff"/><stop offset="1" stop-color="#5b2be0"/></linearGradient>
+        <pattern id="hx" width="28" height="48" patternUnits="userSpaceOnUse" patternTransform="scale(1.1)"><path d="M14 0l14 8v16l-14 8-14-8V8zM14 32l14 8v8M14 32l-14 8v8" fill="none" stroke="#8b5cff" stroke-opacity=".13"/></pattern></defs>
+        <rect width="360" height="330" fill="url(#hx)"/><circle cx="180" cy="150" r="170" fill="url(#glow)"/>
+        <path d="M0 330V250l30-50 24 40 20-70 26 80 14 30v50z" fill="url(#cr1)" opacity=".9"/><path d="M360 330V240l-28-60-22 50-24-90-22 100-16 40v50z" fill="url(#cr2)" opacity=".9"/>
+        <path d="M30 200l-6 60h12zM74 170l-8 70h14zM330 180l-8 60h12zM286 140l-8 90h14z" fill="#fff" opacity=".35"/>
+        <rect y="296" width="360" height="34" fill="#05030f" opacity=".7"/></svg>
+      <div class="reactor off" id="core"><svg viewBox="0 0 238 238" fill="none">
+        <circle cx="119" cy="119" r="112" stroke="#3b2f8a" stroke-width="1.5"/>
+        <g class="r1"><circle cx="119" cy="119" r="108" stroke="url(#cg)" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/></g>
+        <g class="r2"><circle cx="119" cy="119" r="92" stroke="url(#cg)" stroke-width="6" stroke-dasharray="80 30 18 30" stroke-linecap="round"/></g>
+        <g class="r3"><polygon points="119,18 206,68 206,170 119,220 32,170 32,68" stroke="#27e0ff" stroke-opacity=".55" stroke-width="1.5"/><circle cx="119" cy="18" r="5" fill="#27e0ff"/><circle cx="32" cy="170" r="4" fill="#8b5cff"/><circle cx="206" cy="170" r="4" fill="#3dffb0"/></g></svg>
+        <img src="/icon.png" alt=""></div><div class="lock">🔒</div>
+    </div>
+    <div class="card bank"><small>YOUR NEX BALANCE</small><div class="big"><svg class="coin"><use href="#coin"/></svg><span id="bal">0.0000</span></div>
+      <div class="eq eqoff" id="eq"><i></i><i></i><i></i><i></i><i></i></div>
       <div class="pair"><div><b id="rate">0</b><span>NEX / day</span></div><div><b id="hr">0</b><span>NEX / hour</span></div></div></div>
-    <div class="card" style="text-align:center">
-      <div class="core off" id="core"><svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="96" stroke="#2a2160"/><g class="r1"><circle cx="100" cy="100" r="88" stroke="url(#a)" stroke-width="3" stroke-dasharray="3 9" stroke-linecap="round"/></g><g class="r2"><circle cx="100" cy="100" r="74" stroke="url(#b)" stroke-width="5" stroke-dasharray="90 40 20 40"/></g><defs><linearGradient id="a" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8b5cff"/><stop offset="1" stop-color="#27e0ff"/></linearGradient><linearGradient id="b" x1="1" y1="0" x2="0" y2="1"><stop stop-color="#27e0ff"/><stop offset="1" stop-color="#8b5cff"/></linearGradient></defs></svg><img src="/icon.png" alt=""></div>
-      <h2 id="mState" style="margin-top:8px">Miner not active</h2><p class="mu tiny" id="mHint"></p>
-      <button class="btn" id="actBtn">ACTIVATE MINER · 0.1 TON</button></div>
-    <div class="stats"><div><b id="sRef">0</b><small>friends</small></div><div><b id="sSpd">0</b><small>NEX/day</small></div><div><b id="sLv">1</b><small>level</small></div></div>
+    <div class="card"><div class="row"><b id="mState" style="font:800 14px var(--hf)">Miner offline</b><span class="chip y" id="lvl2">LV 1</span></div>
+      <div class="xp"><i id="xp"></i></div><p class="mu tiny" id="xpTxt"></p>
+      <p class="mu tiny" id="mHint" style="margin-top:6px"></p><button class="btn pulse" id="actBtn">⚡ ACTIVATE MINER · 0.1 TON</button></div>
+    <div class="tiles"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="#27e0ff" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-4 3-6 7-6s7 2 7 6M17 5a3.5 3.5 0 010 6M22 20c0-3-2-5-4-5.5"/></svg><b id="sRef">0</b><small>friends</small></div>
+      <div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd166" stroke-width="2" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg><b id="sSpd">0</b><small>NEX/day</small></div>
+      <div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="#3dffb0" stroke-width="2" stroke-linejoin="round"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7.2L12 17.8 5.6 21.5l1.7-7.2L2 9.6 9 9z"/></svg><b id="sLv">1</b><small>level</small></div></div>
   </section>
 
   <section class="view" id="v-tasks">
-    <h1>Tasks</h1>
-    <div class="row" style="margin:6px 0 14px"><span class="chip y" id="tOpen">0 open</span><span class="chip">Earn extra NEX</span></div>
-    <div class="card"><div class="row"><div class="ico gold">▣</div><div><h2 style="margin:0">Daily check-in</h2><p class="mu tiny">Day 7 pays the most. Miss a day and it restarts.</p></div><span class="chip y" id="streak">🔥 0</span></div>
-      <div class="days" id="days"></div><button class="btn" id="ciBtn" style="margin-top:0">CLAIM TODAY</button></div>
+    <div class="card hero"><svg><use href="#chest"/></svg><div><h1 style="margin:0">Tasks</h1><span class="chip y" id="tOpen" style="margin-top:6px">0 open</span></div></div>
+    <div class="card"><div class="row"><div><h2 style="margin:0">Daily check-in</h2><p class="mu tiny">Day 7 chest pays the most. Miss a day and it restarts.</p></div><span class="chip y" id="streak">🔥 0</span></div>
+      <div class="days" id="days"></div><button class="btn g" id="ciBtn" style="margin-top:0">CLAIM TODAY</button></div>
     <h2 style="margin:18px 0 10px">Missions</h2>
-    <div class="tk"><div class="ico pink">▶</div><div><b>Watch an ad</b><br><span class="rw">+<span id="adRw">50</span> NEX</span> <small class="mu" id="adInfo"></small></div><button class="sm" id="adBtn">Start</button></div>
+    <div class="tk"><div class="ico a"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></div><div><b>Watch an ad</b><br><span class="rw">+<span id="adRw">50</span> <svg class="coin"><use href="#coin"/></svg></span> <small class="mu" id="adInfo"></small></div><button class="sm" id="adBtn">Start</button></div>
     <div id="chList"></div>
   </section>
 
   <section class="view" id="v-boost">
     <h1>Boost</h1>
-    <div class="card"><small class="mu">Current speed</small><div class="big"><span id="bSpd">0</span> <em class="mu">NEX/day</em></div>
-      <p class="mu tiny">Every 1,000 NEX you spend adds +<span id="per1k"></span> NEX/day permanently.</p></div>
-    <div class="card"><h2>Buy speed</h2><input type="number" id="bAmt" inputmode="decimal" placeholder="NEX to spend">
-      <div class="chips"><button data-a="500">500</button><button data-a="1000">1,000</button><button data-a="5000">5,000</button><button data-a="max">Max</button></div>
-      <div class="pv" id="bPv">Enter an amount</div><button class="btn" id="bBuy">BUY BOOST</button></div>
+    <div class="card gauge"><svg viewBox="0 0 230 130"><path d="M20 120a95 95 0 01190 0" fill="none" stroke="#000" stroke-width="16" stroke-linecap="round" opacity=".6"/><path id="arc" d="M20 120a95 95 0 01190 0" fill="none" stroke="url(#cg)" stroke-width="16" stroke-linecap="round" stroke-dasharray="298" stroke-dashoffset="298" style="transition:stroke-dashoffset .8s;filter:drop-shadow(0 0 8px #27e0ff)"/></svg>
+      <div class="big"><span id="bSpd">0</span></div><p class="mu tiny">NEX / day · every 1,000 NEX adds +<span id="per1k"></span></p></div>
+    <div class="tiers" id="tiers"></div>
+    <div class="card" style="margin-top:14px"><h2>Custom amount</h2><input type="number" id="bAmt" inputmode="decimal" placeholder="NEX to spend">
+      <div class="pv" id="bPv">Pick a pack or type an amount</div><button class="btn" id="bBuy">⚡ BUY BOOST</button></div>
   </section>
 
   <section class="view" id="v-wallet">
-    <h1>Vault</h1>
-    <div class="card bank"><small>TOTAL BALANCE</small><div class="big"><span id="wbal">0</span> <em>NEX</em></div>
+    <div class="card banner"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="29" fill="#1a1340" stroke="url(#cg)" stroke-width="4"/><circle cx="32" cy="32" r="18" fill="none" stroke="#27e0ff" stroke-width="3" stroke-dasharray="4 5"/><circle cx="32" cy="32" r="7" fill="url(#cg)"/><path d="M32 14v8M32 42v8M14 32h8M42 32h8" stroke="#8b5cff" stroke-width="4" stroke-linecap="round"/></svg><div><h1 style="margin:0">Vault</h1><p class="mu tiny">Your NEX is stored safely here.</p></div></div>
+    <div class="card bank"><small>TOTAL BALANCE</small><div class="big"><svg class="coin"><use href="#coin"/></svg><span id="wbal">0</span></div>
       <div class="pair"><div><b id="wSpd">0</b><span>NEX / day</span></div><div><b id="wFr">0</b><span>active friends</span></div></div></div>
     <h2>TON wallet</h2>
     <div class="card"><div id="tcRoot"></div><p class="tiny mu" style="margin-top:10px" id="wAddr">No wallet connected.</p></div>
@@ -119,54 +179,62 @@ nav button.mid{margin-top:-26px}nav button.mid span{width:56px;height:56px;borde
       <div class="chk"><span class="dot" id="k1">•</span><div><b>Wallet connected</b></div></div>
       <div class="chk"><span class="dot" id="k2">•</span><div><b>Activation paid</b><br><small class="mu">One-time 0.1 TON</small></div></div>
       <div class="chk"><span class="dot" id="k3">•</span><div><b>Withdraw minimum reached</b><br><small class="mu"><span id="wMin"></span> NEX</small></div></div>
-      <button class="btn" id="payBtn">PAY 0.1 TON</button><button class="btn o" id="verBtn">I already paid — verify</button></div>
+      <button class="btn pulse" id="payBtn">PAY 0.1 TON</button><button class="btn o" id="verBtn">I already paid — verify</button></div>
     <h2>Withdraw</h2>
-    <div class="card"><p class="mu tiny" style="margin-bottom:10px">Requests are reviewed manually before payout.</p>
-      <input type="number" id="wAmt" inputmode="decimal" placeholder="Amount of NEX"><button class="btn" id="wBtn">REQUEST WITHDRAWAL</button></div>
+    <div class="card"><p class="mu tiny" style="margin-bottom:10px">Requests are reviewed manually before payout.</p><input type="number" id="wAmt" inputmode="decimal" placeholder="Amount of NEX"><button class="btn g" id="wBtn">REQUEST WITHDRAWAL</button></div>
     <h2>Activity</h2><div class="card hist" id="wHist"></div>
   </section>
 
   <section class="view" id="v-profile">
-    <div class="card row"><div class="av" id="pAv">N</div><div><h1 style="font-size:18px;margin:0" id="pName"></h1><p class="mu tiny" id="pUser"></p></div></div>
-    <div class="stats"><div><b id="pTot">0</b><small>invited</small></div><div><b id="pAct">0</b><small>active</small></div><div><b id="pLv">1</b><small>level</small></div></div>
-    <div class="card"><h2>Invite friends</h2><p class="mu tiny">Earn <b style="color:var(--g)">+<span id="refB"></span> NEX</b> for every friend who activates their miner.</p>
-      <div class="link"><input type="text" id="refLink" readonly><button class="sm" id="cpBtn">Copy</button></div><button class="btn" id="shBtn">SHARE INVITE</button></div>
+    <div class="card me"><div class="av" id="pAv">N</div><h1 id="pName"></h1><p class="mu tiny" id="pUser"></p><span class="lv" id="pLvl">LEVEL 1</span></div>
+    <div class="tiles"><div class="tile"><b id="pTot">0</b><small>invited</small></div><div class="tile"><b id="pAct">0</b><small>active</small></div><div class="tile"><b id="pSpd">0</b><small>NEX/day</small></div></div>
+    <div class="card"><h2>Invite friends</h2>
+      <div class="steps"><div><b>1</b>Share your link</div><div><b>2</b>Friend joins</div><div><b>3</b>They activate: <span style="color:var(--g)">+<span id="refB"></span></span></div></div>
+      <div class="link"><input type="text" id="refLink" readonly><button class="sm" id="cpBtn">Copy</button></div><button class="btn" id="shBtn">🎁 SHARE INVITE</button></div>
   </section>
 </div>
 
 <nav><div>
-  <button data-go="tasks"><span>✦</span>Tasks</button>
-  <button data-go="boost"><span>⚡</span>Boost</button>
-  <button data-go="mine" class="mid on"><span>⬡</span>Mine</button>
-  <button data-go="wallet"><span>◈</span>Wallet</button>
-  <button data-go="profile"><span>◎</span>Profile</button>
+  <button data-go="tasks"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-5"/></svg>Tasks</button>
+  <button data-go="boost"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>Boost</button>
+  <button data-go="mine" class="mid on"><svg viewBox="0 0 24 24"><path d="M12 2l8 4.5v9L12 22l-8-4.5v-9z"/><circle cx="12" cy="12" r="3"/></svg>Mine</button>
+  <button data-go="wallet"><svg viewBox="0 0 24 24"><path d="M3 7h16a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2zM3 7l3-3h11M16 14h2"/></svg>Vault</button>
+  <button data-go="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Profile</button>
 </div></nav>
 <div class="modal" id="adModal"><div class="card"><h2>Ad playing</h2><p class="mu tiny">Stay here to get your reward.</p><div class="bar"><i id="adBar"></i></div><p class="tiny" id="adSec" style="margin-top:10px"></p></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
-const BOT='NexoraMiniingBot'; // your bot username, no @
+const BOT='NexoraMiniingBot',BASE=320;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const tg=window.Telegram&&Telegram.WebApp;
 if(tg){try{tg.ready();tg.expand();tg.setHeaderColor('#05030f');tg.setBackgroundColor('#05030f')}catch(e){}}
 if(!tg||!tg.initData){$('#gate').style.display='grid'}
 const fmt=(n,d=0)=>Number(n||0).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-let D=null,t0=0,tc=null,wallet=null,tt;
+const COIN='<svg class="coin"><use href="#coin"/></svg>';
+let D=null,t0=0,tc=null,wallet=null,tt,pick=0;
 async function api(p,b){const r=await fetch(p,{method:b===undefined?'GET':'POST',headers:{'Content-Type':'application/json','X-Telegram-Init-Data':(tg&&tg.initData)||''},body:b===undefined?undefined:JSON.stringify(b)});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Something went wrong');return d}
+const hap=t=>{try{tg.HapticFeedback.notificationOccurred(t)}catch(e){}};
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2800)}
-async function run(f,ok){try{const r=await f();if(r&&r.user){D=r;t0=Date.now();draw()}if(ok)toast(ok);return r}catch(e){toast(e.message)}}
+function confetti(){const cols=['#8b5cff','#27e0ff','#3dffb0','#ffd166','#ff5c8a'];for(let i=0;i<30;i++){const e=document.createElement('i'),a=Math.random()*6.28,d=110+Math.random()*190;e.style.cssText=`position:fixed;left:50%;top:38%;width:8px;height:12px;border-radius:2px;background:${cols[i%5]};z-index:85;pointer-events:none`;document.body.appendChild(e);e.animate([{transform:'translate(0,0) rotate(0)',opacity:1},{transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d+170}px) rotate(${Math.random()*720}deg)`,opacity:0}],{duration:1100+Math.random()*700,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=()=>e.remove()}}
+async function run(f,ok){try{const r=await f();if(r&&r.user){D=r;t0=Date.now();draw()}if(ok){toast(ok);confetti();hap('success')}return r}catch(e){toast(e.message);hap('error')}}
 const load=()=>run(()=>api('/api/me'));
 const live=()=>D?D.balance+(D.user.miningActive?(Date.now()-t0)/864e5*D.rate:0):0;
-
-function go(id){$$('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+id));$$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===id));scrollTo(0,0)}
+function go(id){$$('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+id));$$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===id));scrollTo(0,0);try{tg.HapticFeedback.selectionChanged()}catch(e){}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go(b.dataset.go)});
+
+/* background particles */
+(function(){const c=$('#bg'),x=c.getContext('2d');let W,H;const P=[];const rs=()=>{W=c.width=innerWidth;H=c.height=innerHeight};rs();addEventListener('resize',rs);
+for(let i=0;i<48;i++)P.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.8+.4,s:Math.random()*.4+.1,h:Math.random()<.5?'#8b5cff':'#27e0ff'});
+function f(){x.clearRect(0,0,W,H);for(const p of P){p.y-=p.s;if(p.y<-5){p.y=H+5;p.x=Math.random()*W}x.globalAlpha=.55;x.fillStyle=p.h;x.beginPath();x.arc(p.x,p.y,p.r,0,7);x.fill()}requestAnimationFrame(f)}
+if(!matchMedia('(prefers-reduced-motion:reduce)').matches)f()})();
 
 /* profile */
 const u=(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user)||{id:0,first_name:'Miner'};
 const nm=[u.first_name,u.last_name].filter(Boolean).join(' ');
-$('#pName').textContent=nm;$('#pUser').textContent=u.username?'@'+u.username:'ID '+u.id;
-if(u.photo_url)$('#pAv').innerHTML=`<img src="${u.photo_url}" alt="">`;else $('#pAv').textContent=(nm[0]||'N').toUpperCase();
+$('#pName').textContent=nm;$('#topName').textContent=nm;$('#pUser').textContent=u.username?'@'+u.username:'ID '+u.id;
+['#topAv','#pAv'].forEach(s=>{if(u.photo_url)$(s).innerHTML=`<img src="${u.photo_url}" alt="">`;else $(s).textContent=(nm[0]||'N').toUpperCase()});
 const link=`https://t.me/${BOT}?startapp=ref_${u.id}`;$('#refLink').value=link;
 $('#cpBtn').onclick=async()=>{try{await navigator.clipboard.writeText(link)}catch(e){$('#refLink').select();document.execCommand('copy')}toast('Link copied')};
 $('#shBtn').onclick=()=>{const x='https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent('Mine NEX with me on NEXORA ⚡');tg?tg.openTelegramLink(x):open(x)};
@@ -175,63 +243,64 @@ $('#shBtn').onclick=()=>{const x='https://t.me/share/url?url='+encodeURIComponen
 try{tc=new TON_CONNECT_UI.TonConnectUI({manifestUrl:location.origin+'/tonconnect-manifest.json',buttonRootId:'tcRoot'});
 tc.onStatusChange(w=>{wallet=w;const a=w&&w.account&&w.account.address;$('#wAddr').textContent=a?'Connected: '+a.slice(0,6)+'…'+a.slice(-6):'No wallet connected.';draw();if(a&&tg&&tg.initData)api('/api/wallet/link',{address:a}).catch(()=>{})})}catch(e){}
 
-/* activation: pays 0.1 TON with a unique comment, then the server checks the chain */
+/* activation */
 function commentBoc(t){const b=new TextEncoder().encode(t),d=[0,0,0,0,...b],c=[0,d.length*2,...d];return btoa(String.fromCharCode(0xb5,0xee,0x9c,0x72,1,1,1,1,0,c.length,0,...c))}
 async function activate(){
   if(!wallet){toast('Connect your wallet first');return go('wallet')}
-  try{
-    const {code}=await api('/api/pay/create',{});
+  try{const {code}=await api('/api/pay/create',{});
     await tc.sendTransaction({validUntil:Math.floor(Date.now()/1000)+600,messages:[{address:D.config.payAddress,amount:D.config.payNano,payload:commentBoc(code)}]});
     toast('Checking payment…');
-    for(let i=0;i<24;i++){await sleep(5000);try{const r=await api('/api/pay/verify',{});if(r.ok){await load();toast('Miner activated ⚡');return go('mine')}}catch(e){}}
-    toast('Not confirmed yet. Use “verify” in Wallet in a minute.');
-  }catch(e){toast(e.message||'Payment cancelled')}
-}
+    for(let i=0;i<24;i++){await sleep(5000);try{const r=await api('/api/pay/verify',{});if(r.ok){await load();toast('Miner activated ⚡');confetti();hap('success');return go('mine')}}catch(e){}}
+    toast('Not confirmed yet. Use “verify” in Vault in a minute.');
+  }catch(e){toast(e.message||'Payment cancelled')}}
 $('#actBtn').onclick=activate;$('#payBtn').onclick=activate;
-$('#verBtn').onclick=async()=>{try{await api('/api/pay/verify',{});await load();toast('Miner activated ⚡')}catch(e){toast(e.message)}};
+$('#verBtn').onclick=async()=>{try{await api('/api/pay/verify',{});await load();toast('Miner activated ⚡');confetti()}catch(e){toast(e.message)}};
 
 /* tasks */
-$('#adBtn').onclick=async()=>{
-  try{const s=await api('/api/task/ad/start',{});let t=s.seconds;$('#adModal').classList.add('show');$('#adSec').textContent=t+'s';
+$('#ciBtn').onclick=()=>run(()=>api('/api/checkin',{}),'Daily reward claimed ✓');
+$('#adBtn').onclick=async()=>{try{const s=await api('/api/task/ad/start',{});let t=s.seconds;$('#adModal').classList.add('show');$('#adSec').textContent=t+'s';
   const iv=setInterval(async()=>{t--;$('#adSec').textContent=Math.max(t,0)+'s';$('#adBar').style.width=(100-t/s.seconds*100)+'%';
-    if(t<=0){clearInterval(iv);await sleep(1200);$('#adModal').classList.remove('show');$('#adBar').style.width='0';run(()=>api('/api/task/ad/claim',{}),'Reward added')}},1000)}catch(e){toast(e.message)}
-};
+    if(t<=0){clearInterval(iv);await sleep(1200);$('#adModal').classList.remove('show');$('#adBar').style.width='0';run(()=>api('/api/task/ad/claim',{}),'Reward added')}},1000)}catch(e){toast(e.message)}};
 $('#chList').onclick=e=>{const b=e.target.closest('button');if(!b)return;const i=+b.dataset.i;
   if(b.dataset.s==='join'){tg?tg.openTelegramLink(D.config.channels[i]):open(D.config.channels[i]);b.dataset.s='claim';b.textContent='Claim'}
   else run(()=>api('/api/task/channel',{index:i}),'Reward added')};
 
-$('#ciBtn').onclick=()=>run(()=>api('/api/checkin',{}),'Daily reward claimed ✓');
 /* boost */
 const bAmt=$('#bAmt');
-$$('.chips button').forEach(c=>c.onclick=()=>{bAmt.value=c.dataset.a==='max'?Math.floor(live()):c.dataset.a;draw()});bAmt.oninput=draw;
-$('#bBuy').onclick=()=>{const a=+bAmt.value;if(!(a>0))return toast('Enter an amount');run(()=>api('/api/boost',{amount:a}),'Speed increased ⚡');bAmt.value=''};
-
-/* withdraw */
+$('#tiers').onclick=e=>{const t=e.target.closest('.tier');if(!t)return;bAmt.value=t.dataset.a;draw()};bAmt.oninput=draw;
+$('#bBuy').onclick=()=>{const a=+bAmt.value;if(!(a>0))return toast('Pick a pack first');run(()=>api('/api/boost',{amount:a}),'Speed increased ⚡');bAmt.value=''};
+const rig=n=>`<svg viewBox="0 0 48 48"><defs><linearGradient id="t${n}" x1="0" y1="1" x2="0" y2="0"><stop stop-color="#5b2be0"/><stop offset="1" stop-color="#27e0ff"/></linearGradient></defs>${[0,1,2,3].map(i=>`<rect x="${6+i*10}" y="${40-(i<n?(i+1)*8:4)}" width="8" height="${i<n?(i+1)*8:4}" rx="2.5" fill="${i<n?`url(#t${n})`:'#2a2160'}"/>`).join('')}</svg>`;
 $('#wBtn').onclick=()=>{run(()=>api('/api/withdraw',{amount:+$('#wAmt').value}),'Withdrawal requested');$('#wAmt').value=''};
 
 function draw(){
   if(!D)return;const c=D.config,act=D.user.miningActive;
-  $('#lvl').textContent='♛ LEVEL '+D.level;$('#rate').textContent=fmt(D.rate);$('#hr').textContent=fmt(D.rate/24,1);
-  $('#core').className='core '+(act?'':'off');
-  $('#mState').textContent=act?'Miner active':'Miner not active';
+  const spent=Math.max(0,(D.rate-BASE)*1000/c.boostPer1k),prog=(spent%5000)/5000;
+  $('#lvl').textContent='LEVEL '+D.level;$('#lvl2').textContent='LV '+D.level;$('#pLvl').textContent='LEVEL '+D.level;
+  $('#rate').textContent=fmt(D.rate);$('#hr').textContent=fmt(D.rate/24,1);
+  $('#core').className='reactor '+(act?'':'off');$('#eq').className='eq'+(act?'':' eqoff');
+  $('#mState').textContent=act?'Miner online':'Miner offline';
   $('#mHint').textContent=act?'Mining continues even when the app is closed.':'Pay 0.1 TON once to start mining and make your invites count.';
   $('#actBtn').style.display=act?'none':'block';$('#payBtn').disabled=act;$('#verBtn').style.display=act?'none':'block';$('#payBtn').textContent=act?'MINER IS ACTIVE ✓':'PAY 0.1 TON';
+  $('#xp').style.width=(prog*100)+'%';$('#xpTxt').textContent=`Spend ${fmt(5000-spent%5000)} more NEX on boosts to reach level ${D.level+1}`;
   $('#sRef').textContent=D.refs.active;$('#sSpd').textContent=fmt(D.rate);$('#sLv').textContent=D.level;
   $('#bSpd').textContent=fmt(D.rate);$('#per1k').textContent=fmt(c.boostPer1k);$('#refB').textContent=fmt(c.refBonus);$('#wMin').textContent=fmt(c.minWithdraw);
-  const a=+bAmt.value;$('#bPv').textContent=a>0?`+${fmt(a/1000*c.boostPer1k,1)} NEX/day → ${fmt(D.rate+a/1000*c.boostPer1k)} NEX/day`:'Enter an amount';
-  $('#pTot').textContent=D.refs.total;$('#pAct').textContent=D.refs.active;$('#pLv').textContent=D.level;
+  $('#arc').style.strokeDashoffset=298*(1-Math.min(1,(D.rate-BASE)/(BASE*4)+.04));
+  const a=+bAmt.value;
+  $('#tiers').innerHTML=[[500,1],[1000,2],[5000,3],[10000,4]].map(([n,r],i)=>`<div class="tier ${a===n?'sel':''}" data-a="${n}">${rig(r)}<b>${['SPARK','PULSE','SURGE','NOVA'][i]}</b><em>${fmt(n)} NEX</em><small>+${fmt(n/1000*c.boostPer1k)} / day</small></div>`).join('');
+  $('#bPv').textContent=a>0?`+${fmt(a/1000*c.boostPer1k,1)} NEX/day → ${fmt(D.rate+a/1000*c.boostPer1k)} NEX/day`:'Pick a pack or type an amount';
+  $('#pTot').textContent=D.refs.total;$('#pAct').textContent=D.refs.active;$('#pSpd').textContent=fmt(D.rate);
   $('#adRw').textContent=c.adReward;$('#adInfo').textContent=`${D.ads.count}/${D.ads.limit} today`;$('#adBtn').disabled=D.ads.count>=D.ads.limit;
-  $('#chList').innerHTML=c.channels.map((_,i)=>`<div class="tk"><div class="ico">➤</div><div><b>Join channel ${i+1}</b><br><span class="rw">+${c.channelReward} NEX</span></div>${D.channelsDone[i]?'<span class="done">✓</span>':`<button class="sm" data-i="${i}" data-s="join">Join</button>`}</div>`).join('');
-  $('#wHist').innerHTML=D.withdrawals.map(w=>`<div><span>${fmt(w.amount)} NEX · ${new Date(w.created_at*1000).toLocaleDateString()}</span><span class="tag">${w.status}</span></div>`).join('');
+  $('#chList').innerHTML=c.channels.map((_,i)=>`<div class="tk"><div class="ico b"><svg viewBox="0 0 24 24" fill="#fff"><path d="M21 3L3 10.5l5.5 2L10 19l3-4 4.5 3.5z"/></svg></div><div><b>Join channel ${i+1}</b><br><span class="rw">+${c.channelReward} ${COIN}</span></div>${D.channelsDone[i]?'<span class="done">✓</span>':`<button class="sm" data-i="${i}" data-s="join">Join</button>`}</div>`).join('');
+  $('#wHist').innerHTML=D.withdrawals.length?D.withdrawals.map(w=>`<div><span>${fmt(w.amount)} NEX · ${new Date(w.created_at*1000).toLocaleDateString()}</span><span class="tag">${w.status}</span></div>`).join(''):'<p class="mu tiny">No withdrawals yet.</p>';
   const ci=D.checkin,cyc=ci.doneToday?((ci.streak-1)%7)+1:ci.streak%7;
-  $('#days').innerHTML=ci.rewards.map((r,i)=>`<div class="day ${i<cyc?'ok':''} ${!ci.doneToday&&i===cyc?'now':''} ${i===6?'last':''}"><small>D${i+1}</small><b>+${r}</b>${i<cyc?'✓':''}</div>`).join('');
+  $('#days').innerHTML=ci.rewards.map((r,i)=>i<6?`<div class="day ${i<cyc?'ok':''} ${!ci.doneToday&&i===cyc?'now':''}"><small>DAY ${i+1}</small>${COIN}<b>+${r}</b></div>`:`<div class="day last ${i<cyc?'ok':''} ${!ci.doneToday&&i===cyc?'now':''}"><small>DAY 7 · CHEST</small><svg><use href="#chest"/></svg><b>+${r}</b></div>`).join('');
   $('#streak').textContent='🔥 '+ci.streak;$('#ciBtn').disabled=ci.doneToday;$('#ciBtn').textContent=ci.doneToday?'CHECKED IN ✓':'CLAIM TODAY';
   $('#tOpen').textContent=((ci.doneToday?0:1)+(D.ads.count<D.ads.limit?1:0)+D.channelsDone.filter(x=>!x).length)+' open';
   $('#wSpd').textContent=fmt(D.rate);$('#wFr').textContent=D.refs.active;
   [['#k1',!!(wallet&&wallet.account)],['#k2',act],['#k3',live()>=c.minWithdraw]].forEach(([s,v])=>{$(s).className='dot'+(v?' ok':'');$(s).textContent=v?'✓':'•'});
-  if(!D.withdrawals.length)$('#wHist').innerHTML='<p class="mu tiny">No withdrawals yet.</p>';
 }
-setInterval(()=>{if(!D)return;const v=live();$('#bal').textContent=fmt(v,4);$('#wbal').textContent=fmt(v,2)},100);
+setInterval(()=>{if(!D)return;const v=live();$('#bal').textContent=fmt(v,4);$('#wbal').textContent=fmt(v,2);$('#tbal').textContent=fmt(v,1)},100);
+setInterval(()=>{if(D&&D.user.miningActive&&$('#v-mine').classList.contains('on')){const e=document.createElement('div');e.className='ft';e.textContent='+'+(D.rate/86400*3).toFixed(4)+' NEX';e.style.marginLeft=(Math.random()*80-40)+'px';$('.stage').appendChild(e);setTimeout(()=>e.remove(),2500)}},3000);
 setInterval(()=>{if(D&&!document.hidden)load()},60000);
 if(tg&&tg.initData)load();
 </script>
