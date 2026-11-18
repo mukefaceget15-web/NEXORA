@@ -22,7 +22,16 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders() });
-    if (url.pathname === "/api/health") return json({ ok: true, app: "NEXORA" });
+    if (url.pathname === "/api/health") {
+      return json({
+        ok: true,
+        app: "NEXORA",
+        hasBotToken: Boolean(env.TELEGRAM_BOT_TOKEN),
+        hasPayAddress: Boolean(env.PAY_ADDRESS),
+        hasTonKey: Boolean(env.TONCENTER_API_KEY),
+        hasDb: Boolean(env.DB)
+      });
+    }
     if (url.pathname === "/api/telegram/webhook" && request.method === "POST") return handleTelegramWebhook(request, env);
     if (!url.pathname.startsWith("/api/")) return env.ASSETS.fetch(request);
 
