@@ -1,623 +1,791 @@
 <!doctype html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <meta name="theme-color" content="#0b0618">
-<title>NEXORA — Next Generation Mining</title>
+<title>NEXORA Mining</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tonconnect/ui@2.0.9/dist/tonconnect-ui.min.js"></script>
 <style>
-:root{
-  --bg:#0b0618;
-  --s1:#140e2e;
-  --s2:#1e1545;
-  --ln:#4a3a9a;
-  --tx:#f4f0ff;
-  --mu:#a89fd4;
-  --v:#9b6dff;
-  --c:#2ee6ff;
-  --g:#3dffb0;
-  --y:#ffd166;
-  --p:#ff5c8a;
-  --hf:'Unbounded',system-ui,sans-serif;
-  --bf:'Manrope',system-ui,sans-serif;
+:root {
+  --bg: #0b0618;
+  --card: #16102e;
+  --card2: #1e1640;
+  --border: #4a3a9a55;
+  --text: #f4f0ff;
+  --muted: #a89fd4;
+  --purple: #9b6dff;
+  --cyan: #2ee6ff;
+  --green: #3dffb0;
+  --gold: #ffd166;
+  --pink: #ff5c8a;
+  --font: 'Vazirmatn', system-ui, sans-serif;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{background:var(--bg);color:var(--tx);font:15px/1.45 var(--bf)}
-body{
-  min-height:100vh;
-  padding-top:env(safe-area-inset-top,0);
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body {
   background:
-    radial-gradient(ellipse 90% 50% at 85% -10%,#7b3ff066,transparent 65%),
-    radial-gradient(ellipse 70% 40% at -15% 50%,#0d8ab855,transparent 70%),
-    radial-gradient(ellipse 50% 30% at 50% 100%,#3a1a8a44,transparent 60%),
+    radial-gradient(ellipse 100% 60% at 80% -20%, #7b3ff055, transparent 60%),
+    radial-gradient(ellipse 80% 50% at -20% 60%, #0d8ab840, transparent 60%),
     var(--bg);
+  padding-bottom: calc(90px + env(safe-area-inset-bottom));
 }
-#bg{position:fixed;inset:0;pointer-events:none;z-index:0}
-.app{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:12px 16px calc(120px + env(safe-area-inset-bottom,0))}
-button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
-button:focus-visible,input:focus-visible{outline:2px solid var(--c);outline-offset:2px}
-.view{display:none}.view.on{display:block;animation:in .32s ease}
-@keyframes in{from{opacity:0;transform:translateY(12px) scale(.985)}}
-h1{font:800 24px var(--hf);margin:4px 0 12px;text-shadow:0 0 28px #9b6dffaa}
-h2{font:700 14px var(--hf);margin-bottom:12px}
-.mu{color:var(--mu)}.tiny{font-size:12px}
-.coin{width:1.15em;height:1.15em;vertical-align:-.2em;filter:drop-shadow(0 0 8px #2ee6ffcc)}
+.app { max-width: 480px; margin: 0 auto; padding: 12px 14px 20px; }
 
-/* TOP BAR */
-.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.who{display:flex;align-items:center;gap:11px}
-.av{
-  width:46px;height:46px;border-radius:50%;
-  background:linear-gradient(145deg,#2a1d5c,#1a1340);
-  display:grid;place-items:center;font:800 18px var(--hf);
-  overflow:hidden;flex:none;
-  border:2.5px solid var(--v);
-  box-shadow:0 0 0 4px #9b6dff33,0 0 22px #9b6dff77;
+/* ===== TOP BAR ===== */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 0 2px;
 }
-.av img{width:100%;height:100%;object-fit:cover}
-.who b{display:block;font-size:14px;line-height:1.15}
-.who small{color:var(--c);font-weight:800;font-size:11px;letter-spacing:.08em}
-.tb{
-  display:flex;align-items:center;gap:8px;
-  padding:9px 15px;border-radius:99px;
-  background:linear-gradient(135deg,#1a1340cc,#0f0a28ee);
-  border:1px solid var(--ln);
-  font:700 13px var(--hf);
-  box-shadow:inset 0 1px 0 #ffffff18,0 0 24px #2ee6ff22;
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-
-/* CARDS */
-.card{
-  position:relative;
-  background:linear-gradient(165deg,#221a52ee,#120c2cee);
-  backdrop-filter:blur(12px);
-  border:1px solid #5a48b088;
-  border-radius:24px;
-  padding:18px;
-  margin-bottom:14px;
-  box-shadow:0 12px 36px #00000088,inset 0 1px 0 #ffffff16;
+.avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #2a1d5c, #1a1340);
+  border: 2px solid var(--purple);
+  box-shadow: 0 0 0 3px #9b6dff33, 0 0 20px #9b6dff66;
+  display: grid; place-items: center;
+  font-weight: 800; font-size: 18px;
+  overflow: hidden;
 }
-.bank{
-  overflow:hidden;border:0;
-  background:linear-gradient(135deg,#6b35f0 0%,#2a6ef0 50%,#18c8e8 100%);
-  box-shadow:0 14px 40px #5b2be066,inset 0 2px 0 #ffffff44;
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.user-info b { display: block; font-size: 14px; font-weight: 700; }
+.user-info small { color: var(--cyan); font-size: 11px; font-weight: 700; }
+.balance-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg, #1a1340, #0f0a28);
+  border: 1px solid #4a3a9a88;
+  border-radius: 50px;
+  padding: 8px 14px;
+  font-weight: 800; font-size: 13px;
+  box-shadow: 0 0 20px #2ee6ff22;
 }
-.bank::before{
-  content:"";position:absolute;top:-60%;left:-70%;width:45%;height:220%;
-  background:linear-gradient(90deg,transparent,#ffffff55,transparent);
-  transform:rotate(22deg);animation:shine 4.5s infinite;
-}
-@keyframes shine{0%,55%{left:-70%}100%{left:140%}}
-.bank small{font-weight:800;letter-spacing:.12em;font-size:11px;opacity:.9}
-.big{
-  font:800 36px var(--hf);margin:6px 0 2px;
-  letter-spacing:-.03em;display:flex;align-items:center;gap:12px;
-}
-.big .coin{width:40px;height:40px}
-.big em{font:700 14px var(--hf);font-style:normal;opacity:.9}
-.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.pair div{
-  background:#00000044;border-radius:16px;padding:11px 13px;
-  border:1px solid #ffffff22;
-}
-.pair b{display:block;font:700 16px var(--hf)}
-.pair span{font-size:11px;opacity:.85}
-
-/* BUTTONS */
-.btn{
-  position:relative;width:100%;padding:16px;border-radius:18px;
-  font:800 13px var(--hf);letter-spacing:.04em;color:#06031a;
-  margin-top:12px;
-  background:linear-gradient(180deg,#b794ff,#7a55ff 50%,#2ed0ff);
-  box-shadow:0 6px 0 #3d28b0,0 16px 32px #7a55ff66,inset 0 2px 0 #fff8;
-  transition:transform .08s,box-shadow .08s;
-}
-.btn:active{transform:translateY(5px);box-shadow:0 1px 0 #3d28b0,0 6px 16px #7a55ff66,inset 0 2px 0 #fff8}
-.btn.g{
-  background:linear-gradient(180deg,#7dffd0,#1fd68f);
-  box-shadow:0 6px 0 #0d8a5c,0 16px 32px #1fd68f55,inset 0 2px 0 #fff8;
-}
-.btn.o{
-  background:#ffffff10;color:var(--tx);
-  box-shadow:0 4px 0 #0009;border:1px solid var(--ln);
-}
-.btn.pulse{animation:bp 1.7s infinite}
-@keyframes bp{50%{filter:brightness(1.22)}}
-.btn[disabled]{filter:grayscale(.75) brightness(.55);box-shadow:0 3px 0 #000a;animation:none}
-.sm{
-  padding:10px 18px;border-radius:14px;
-  background:linear-gradient(180deg,#b794ff,#7a55ff);
-  font-weight:800;font-size:13px;
-  box-shadow:0 3px 0 #3d28b0,inset 0 1px 0 #fff6;
-}
-.sm:active{transform:translateY(3px);box-shadow:none}
-.sm[disabled]{background:var(--s2);color:var(--mu);box-shadow:none}
-.chip{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:6px 12px;border-radius:99px;
-  background:#9b6dff28;border:1px solid #9b6dff77;
-  font-size:12px;font-weight:800;
-}
-.chip.y{background:#ffd16625;border-color:#ffd16688;color:var(--y)}
-.row{display:flex;align-items:center;gap:12px}
-.row>div:nth-child(2){flex:1}
-
-/* MINE STAGE */
-.stage{position:relative;height:340px;margin:0 -16px 8px;overflow:hidden}
-.stage>svg.scene{position:absolute;inset:0;width:100%;height:100%}
-.reactor{
-  position:absolute;left:50%;top:46%;width:220px;height:220px;
-  transform:translate(-50%,-50%);
-}
-.reactor svg{position:absolute;inset:-16px;width:252px;height:252px}
-.reactor img{
-  position:absolute;inset:48px;width:124px;height:124px;
-  border-radius:50%;object-fit:cover;
-  box-shadow:0 0 60px #9b6dffcc,0 0 110px #2ee6ff66;
-  animation:beat 2.3s ease-in-out infinite;
-}
-@keyframes beat{50%{transform:scale(1.07);box-shadow:0 0 80px #9b6dff,0 0 140px #2ee6ff99}}
-.r1{transform-origin:126px 126px;animation:sp 15s linear infinite}
-.r2{transform-origin:126px 126px;animation:sp 9s linear infinite reverse}
-.r3{transform-origin:126px 126px;animation:sp 22s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
-.off .r1,.off .r2,.off .r3,.off img{animation-play-state:paused}
-.off img{filter:grayscale(1) brightness(.4);box-shadow:none}
-.off svg{opacity:.45}
-.lock{
-  position:absolute;left:50%;top:46%;
-  transform:translate(-50%,-50%);
-  font-size:36px;filter:drop-shadow(0 0 12px #000);
-  display:none;
-}
-.off~.lock{display:block}
-.ft{
-  position:absolute;left:50%;top:58%;
-  font:800 14px var(--hf);color:var(--g);
-  text-shadow:0 0 14px #3dffb0;pointer-events:none;
-  animation:fl 2.3s ease-out forwards;white-space:nowrap;
-}
-@keyframes fl{from{opacity:0;transform:translate(-50%,0)}12%{opacity:1}to{opacity:0;transform:translate(-50%,-140px)}}
-.eq{display:flex;gap:4px;align-items:flex-end;height:24px;justify-content:center;margin-top:8px}
-.eq i{width:5px;border-radius:3px;background:linear-gradient(var(--c),var(--v));height:7px;animation:eq 1s ease-in-out infinite}
-.eq i:nth-child(2){animation-delay:.12s}
-.eq i:nth-child(3){animation-delay:.24s}
-.eq i:nth-child(4){animation-delay:.36s}
-.eq i:nth-child(5){animation-delay:.48s}
-@keyframes eq{50%{height:24px}}
-.eqoff i{animation-play-state:paused}
-.xp{height:11px;border-radius:99px;background:#000a;border:1px solid var(--ln);overflow:hidden;margin:9px 0 5px}
-.xp i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--v),var(--c),var(--g));box-shadow:0 0 16px var(--c);transition:width .6s}
-.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.tile{
-  background:linear-gradient(165deg,#221a52,#120c2c);
-  border:1px solid #5a48b066;border-radius:18px;
-  padding:13px 8px;text-align:center;
-  box-shadow:0 5px 0 #0009;
-}
-.tile svg{width:26px;height:26px;margin-bottom:5px}
-.tile b{display:block;font:700 16px var(--hf)}
-.tile small{color:var(--mu);font-size:11px}
-
-/* TASKS */
-.hero{display:flex;align-items:center;gap:14px;overflow:hidden}
-.hero svg{width:86px;height:86px;flex:none;filter:drop-shadow(0 0 18px #ffd16699)}
-.days{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
-.day{
-  border-radius:16px;padding:11px 4px;
-  background:linear-gradient(165deg,#221a52,#120c2c);
-  border:1px solid #5a48b066;text-align:center;
-  font-size:10px;color:var(--mu);box-shadow:0 3px 0 #0009;
-}
-.day b{display:block;font:800 13px var(--hf);color:var(--tx);margin-top:3px}
-.day .coin{width:22px;height:22px;display:block;margin:3px auto}
-.day.ok{border-color:var(--g);background:linear-gradient(165deg,#0f4a3a,#0b2a2a)}
-.day.ok b{color:var(--g)}
-.day.now{border-color:var(--c);box-shadow:0 0 0 2px #2ee6ff55,0 0 28px #2ee6ff66;animation:bp 1.4s infinite}
-.day.last{grid-column:span 2;background:linear-gradient(165deg,#4a3a10,#2a1a50);border-color:var(--y)}
-.day.last svg{width:46px;height:46px}
-.tk{
-  display:flex;align-items:center;gap:12px;padding:15px;
-  border-radius:20px;
-  background:linear-gradient(165deg,#221a52dd,#120c2cdd);
-  border:1px solid #5a48b066;margin-bottom:10px;
-  box-shadow:0 5px 0 #0009;
-}
-.tk>div:nth-child(2){flex:1}
-.ico{
-  width:52px;height:52px;border-radius:16px;
-  display:grid;place-items:center;flex:none;
-  box-shadow:0 4px 0 #0008,inset 0 2px 0 #fff6;
-}
-.ico svg{width:24px;height:24px}
-.ico.a{background:linear-gradient(180deg,#ff8ab0,#ff4f86)}
-.ico.b{background:linear-gradient(180deg,#6ee9ff,#1fa8ff)}
-.rw{
-  display:inline-flex;align-items:center;gap:4px;margin-top:4px;
-  padding:3px 11px;border-radius:99px;
-  background:#ffd16622;color:var(--y);font:800 12px var(--hf);
-}
-.done{color:var(--g);font-weight:800;font-size:26px}
-
-/* BOOST */
-.gauge{text-align:center;position:relative}
-.gauge svg{width:230px;height:130px}
-.gauge .big{justify-content:center;margin-top:-52px;font-size:30px}
-.tiers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.tier{
-  border-radius:20px;padding:15px 10px;text-align:center;
-  background:linear-gradient(165deg,#221a52,#120c2c);
-  border:2px solid #5a48b066;box-shadow:0 5px 0 #0009;
-  transition:.15s;
-}
-.tier.sel{border-color:var(--c);box-shadow:0 0 0 2px #2ee6ff44,0 0 28px #2ee6ff55}
-.tier svg{width:54px;height:54px}
-.tier b{display:block;font:800 13px var(--hf);margin-top:5px}
-.tier small{color:var(--g);font-weight:800;font-size:12px}
-.tier em{display:block;font-style:normal;font-size:11px;color:var(--mu)}
-input[type=number],input[type=text]{
-  width:100%;padding:14px;border-radius:16px;
-  border:1px solid var(--ln);background:#08051acc;
-  color:var(--tx);font:700 16px var(--bf);
-}
-.pv{
-  margin-top:10px;padding:12px;border-radius:14px;
-  background:#3dffb015;border:1px solid #3dffb055;
-  color:var(--g);font-weight:800;text-align:center;
+.coin {
+  width: 18px; height: 18px;
+  filter: drop-shadow(0 0 6px #2ee6ffaa);
 }
 
-/* WALLET */
-.banner{display:flex;align-items:center;gap:13px}
-.banner svg{width:78px;height:78px;flex:none;filter:drop-shadow(0 0 18px #9b6dffaa)}
-.chk{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid #ffffff14}
-.chk:first-of-type{border-top:0}
-.dot{
-  width:30px;height:30px;border-radius:50%;
-  display:grid;place-items:center;background:#ffffff14;
-  font-size:15px;flex:none;color:var(--mu);
+/* ===== CARDS ===== */
+.card {
+  background: linear-gradient(165deg, #1e1640ee, #120c2cee);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 10px 30px #00000066, inset 0 1px 0 #ffffff12;
+  position: relative;
+  overflow: hidden;
 }
-.dot.ok{background:linear-gradient(180deg,#7dffd0,#1fd68f);color:#052;box-shadow:0 0 16px #3dffb088}
-.hist div{display:flex;justify-content:space-between;padding:11px 0;border-top:1px solid #ffffff14;font-size:13px}
-.hist div:first-child{border-top:0}
-.tag{color:var(--y);font-weight:800}
-
-/* PROFILE */
-.me{text-align:center}
-.me .av{width:94px;height:94px;margin:0 auto 12px;font-size:34px}
-.me h1{margin:4px 0 2px;font-size:21px}
-.lv{
-  display:inline-block;margin-top:9px;padding:6px 16px;border-radius:99px;
-  background:linear-gradient(90deg,var(--v),var(--c));color:#06031a;
-  font:800 12px var(--hf);
+.card-green {
+  background: linear-gradient(135deg, #1a8f6a, #0d6b4a 40%, #0a4a3a);
+  border: none;
+  box-shadow: 0 12px 32px #0d6b4a55, inset 0 2px 0 #ffffff33;
 }
-.steps{display:flex;gap:8px;margin:13px 0}
-.steps div{flex:1;text-align:center;font-size:11px;color:var(--mu)}
-.steps b{
-  display:grid;place-items:center;width:34px;height:34px;margin:0 auto 5px;
-  border-radius:50%;background:linear-gradient(180deg,#b794ff,#7a55ff);
-  color:#06031a;font:800 14px var(--hf);
+.card-green::before {
+  content: "";
+  position: absolute;
+  top: -50%; left: -60%;
+  width: 40%; height: 200%;
+  background: linear-gradient(90deg, transparent, #ffffff44, transparent);
+  transform: rotate(20deg);
+  animation: shine 5s infinite;
 }
-.link{display:flex;gap:8px;margin-top:11px}
-
-/* NAV */
-nav{position:fixed;left:0;right:0;bottom:0;padding:0 12px calc(12px + env(safe-area-inset-bottom,0));z-index:20;pointer-events:none}
-nav div{
-  pointer-events:auto;max-width:496px;margin:0 auto;
-  display:grid;grid-template-columns:repeat(5,1fr);align-items:end;
-  background:#110b28f5;backdrop-filter:blur(20px);
-  border:1px solid #5a48b088;border-radius:28px;
-  padding:9px 6px;
-  box-shadow:0 -8px 36px #9b6dff22,0 12px 36px #000a;
-}
-nav button{
-  display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:7px 0;color:var(--mu);font-size:11px;font-weight:800;
-}
-nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-nav button.on{color:var(--c)}
-nav button.on svg{filter:drop-shadow(0 0 10px var(--c))}
-nav button.mid{margin-top:-32px}
-nav button.mid svg{
-  box-sizing:content-box;padding:16px;width:26px;height:26px;
-  border-radius:50%;
-  background:linear-gradient(180deg,#b794ff,#2ed0ff);
-  color:#06031a;stroke:#06031a;
-  box-shadow:0 6px 0 #3d28b0,0 12px 28px #9b6dffaa;
+@keyframes shine {
+  0%, 60% { left: -60%; }
+  100% { left: 130%; }
 }
 
-.toast{
-  position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top,0));
-  transform:translate(-50%,-110px);
-  background:linear-gradient(165deg,var(--s2),var(--s1));
-  border:1px solid var(--v);padding:13px 22px;border-radius:16px;
-  font-weight:800;z-index:80;
-  transition:transform .35s cubic-bezier(.3,1.4,.5,1);
-  max-width:90%;text-align:center;box-shadow:0 12px 36px #000a;
+/* ===== BALANCE CARD ===== */
+.balance-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 8px;
 }
-.toast.show{transform:translate(-50%,0)}
-.modal{position:fixed;inset:0;background:#08051af5;display:none;place-items:center;z-index:60;padding:24px}
-.modal.show{display:grid}
-.modal .card{width:100%;max-width:340px;text-align:center}
-.bar{height:10px;border-radius:9px;background:#000;overflow:hidden;margin-top:14px;border:1px solid var(--ln)}
-.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--v),var(--c))}
-#gate{position:fixed;inset:0;background:var(--bg);display:none;place-items:center;text-align:center;padding:30px;z-index:90}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.balance-header .left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.v-logo {
+  width: 42px; height: 42px;
+  background: linear-gradient(145deg, #3dffb0, #1fd68f);
+  border-radius: 12px;
+  display: grid; place-items: center;
+  font-weight: 900; font-size: 22px; color: #062a1a;
+  box-shadow: 0 4px 12px #3dffb066;
+}
+.balance-title {
+  font-size: 12px;
+  opacity: 0.85;
+  font-weight: 600;
+}
+.balance-amount {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+.balance-usd {
+  font-size: 13px;
+  opacity: 0.8;
+  font-weight: 600;
+}
+.level-badge {
+  background: #00000044;
+  border: 1px solid #ffffff33;
+  border-radius: 50px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.split-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+.split-box {
+  background: #00000033;
+  border-radius: 14px;
+  padding: 10px 12px;
+  border: 1px solid #ffffff18;
+}
+.split-box .label {
+  font-size: 11px;
+  opacity: 0.75;
+  margin-bottom: 2px;
+}
+.split-box .value {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+/* ===== MINE PASS ===== */
+.pass-card {
+  background: linear-gradient(165deg, #1a3a2e, #0d2a22);
+  border: 1px solid #3dffb044;
+}
+.pass-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.pass-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 15px;
+}
+.pass-badge {
+  background: linear-gradient(135deg, #ffd166, #ff9d2e);
+  color: #3b1e06;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 8px;
+}
+.check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+.check-icon {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #3dffb0, #1fd68f);
+  display: grid; place-items: center;
+  color: #062a1a;
+  font-size: 14px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+.check-icon.off {
+  background: #ffffff15;
+  color: var(--muted);
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 16px;
+  border: none;
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: transform 0.1s;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary {
+  background: linear-gradient(180deg, #b794ff, #7a55ff 50%, #2ed0ff);
+  color: #06031a;
+  box-shadow: 0 5px 0 #3d28b0, 0 12px 24px #7a55ff55;
+}
+.btn-green {
+  background: linear-gradient(180deg, #7dffd0, #1fd68f);
+  color: #062a1a;
+  box-shadow: 0 5px 0 #0d8a5c, 0 12px 24px #1fd68f44;
+}
+.btn-outline {
+  background: #ffffff10;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-sm {
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  background: linear-gradient(180deg, #b794ff, #7a55ff);
+  color: #06031a;
+  border: none;
+  box-shadow: 0 3px 0 #3d28b0;
+}
+
+/* ===== SECTION TITLES ===== */
+.section-title {
+  font-size: 15px;
+  font-weight: 800;
+  margin: 18px 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ===== TASKS ===== */
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: linear-gradient(165deg, #1e1640, #120c2c);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  margin-bottom: 10px;
+}
+.task-icon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: grid; place-items: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 0 #0008;
+}
+.task-icon.pink { background: linear-gradient(145deg, #ff8ab0, #ff4f86); }
+.task-icon.blue { background: linear-gradient(145deg, #6ee9ff, #1fa8ff); }
+.task-icon.green { background: linear-gradient(145deg, #7dffd0, #1fd68f); }
+.task-icon.gold { background: linear-gradient(145deg, #ffd166, #ff9d2e); }
+.task-info { flex: 1; min-width: 0; }
+.task-info b { display: block; font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+.task-info .reward {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #ffd16622;
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 50px;
+}
+.task-timer {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ===== DAILY ===== */
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 12px 0;
+}
+.day-box {
+  background: linear-gradient(165deg, #1e1640, #120c2c);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 4px;
+  text-align: center;
+  font-size: 10px;
+  color: var(--muted);
+}
+.day-box b {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+  margin-top: 2px;
+}
+.day-box.done {
+  border-color: var(--green);
+  background: linear-gradient(165deg, #0f4a3a, #0b2a2a);
+}
+.day-box.done b { color: var(--green); }
+.day-box.today {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 2px #2ee6ff44, 0 0 20px #2ee6ff55;
+}
+.day-box.chest {
+  grid-column: span 2;
+  background: linear-gradient(165deg, #4a3a10, #2a1a50);
+  border-color: var(--gold);
+}
+
+/* ===== NAV ===== */
+.nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  padding: 0 12px calc(10px + env(safe-area-inset-bottom));
+  z-index: 50;
+  pointer-events: none;
+}
+.nav-inner {
+  max-width: 480px;
+  margin: 0 auto;
+  background: #110b28f5;
+  backdrop-filter: blur(20px);
+  border: 1px solid #4a3a9a66;
+  border-radius: 24px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 8px 4px;
+  pointer-events: auto;
+  box-shadow: 0 -8px 30px #9b6dff22;
+}
+.nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 0;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  background: none;
+  border: none;
+  font-family: var(--font);
+  cursor: pointer;
+}
+.nav-btn.active { color: var(--cyan); }
+.nav-btn.active svg { filter: drop-shadow(0 0 8px var(--cyan)); }
+.nav-btn.center {
+  margin-top: -28px;
+}
+.nav-btn.center .icon-wrap {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #b794ff, #2ed0ff);
+  display: grid; place-items: center;
+  box-shadow: 0 5px 0 #3d28b0, 0 10px 24px #9b6dff88;
+  color: #06031a;
+}
+.nav-btn svg { width: 22px; height: 22px; }
+
+/* ===== VIEWS ===== */
+.view { display: none; }
+.view.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed;
+  top: calc(16px + env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: linear-gradient(165deg, #1e1640, #120c2c);
+  border: 1px solid var(--purple);
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-weight: 700;
+  z-index: 100;
+  transition: transform 0.35s cubic-bezier(0.3, 1.4, 0.5, 1);
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 30px #000a;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ===== GATE ===== */
+#gate {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  display: none;
+  place-items: center;
+  text-align: center;
+  padding: 30px;
+  z-index: 200;
+}
+#gate h1 { font-size: 28px; margin-bottom: 8px; }
+
+/* ===== MISC ===== */
+.row { display: flex; align-items: center; gap: 10px; }
+.muted { color: var(--muted); }
+.tiny { font-size: 11px; }
+input {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: #08051acc;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 50px;
+  background: #9b6dff25;
+  border: 1px solid #9b6dff66;
+  font-size: 11px;
+  font-weight: 700;
+}
 </style>
 </head>
 <body>
-<canvas id="bg"></canvas>
-<svg width="0" height="0" style="position:absolute"><defs>
-  <linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#2ee6ff"/><stop offset="1" stop-color="#9b6dff"/></linearGradient>
-  <linearGradient id="gg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffe9a0"/><stop offset="1" stop-color="#ff9d2e"/></linearGradient>
-  <symbol id="coin" viewBox="0 0 64 64">
-    <circle cx="32" cy="32" r="30" fill="url(#cg)"/>
-    <circle cx="32" cy="32" r="23" fill="#0a0626"/>
-    <path d="M22 44V20h5l10 17V20h5v24h-5L27 27v17z" fill="#fff"/>
-  </symbol>
-  <symbol id="chest" viewBox="0 0 64 64">
-    <rect x="8" y="26" width="48" height="28" rx="6" fill="#6a3b10"/>
-    <path d="M8 32a24 20 0 0148 0v-6a6 6 0 00-6-6H14a6 6 0 00-6 6z" fill="url(#gg)"/>
-    <rect x="8" y="32" width="48" height="6" fill="#3b1e06"/>
-    <rect x="27" y="30" width="10" height="14" rx="3" fill="url(#gg)"/>
-    <circle cx="32" cy="37" r="2" fill="#3b1e06"/>
-  </symbol>
-</defs></svg>
-
-<div id="gate"><div><h1>NEXORA</h1><p class="mu">Please open this app from inside Telegram.</p></div></div>
+<div id="gate"><div><h1>NEXORA</h1><p class="muted">لطفاً اپ را از داخل تلگرام باز کنید</p></div></div>
 
 <div class="app">
+  <!-- TOP -->
   <div class="top">
-    <div class="who">
-      <div class="av" id="topAv">N</div>
-      <div><b id="topName">Miner</b><small id="lvl">LEVEL 1</small></div>
+    <div class="user">
+      <div class="avatar" id="topAv">N</div>
+      <div class="user-info">
+        <b id="topName">Miner</b>
+        <small id="lvl">LEVEL 1</small>
+      </div>
     </div>
-    <div class="tb"><svg class="coin"><use href="#coin"/></svg><span id="tbal">0</span></div>
+    <div class="balance-pill">
+      <svg class="coin" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="url(#cg)"/><circle cx="12" cy="12" r="7" fill="#0a0626"/><path d="M9 16V8h1.8l3.2 5.5V8H16v8h-1.8L11 10.5V16H9z" fill="#fff"/></svg>
+      <span id="tbal">0</span>
+    </div>
   </div>
 
-  <!-- MINE -->
-  <section class="view on" id="v-mine">
-    <div class="stage">
-      <svg class="scene" viewBox="0 0 360 340" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <radialGradient id="glow" cx=".5" cy=".5" r=".5">
-            <stop stop-color="#9b6dff" stop-opacity=".6"/>
-            <stop offset="1" stop-color="#9b6dff" stop-opacity="0"/>
-          </radialGradient>
-          <linearGradient id="cr1" x1="0" y1="0" x2="1" y2="1">
-            <stop stop-color="#2ee6ff"/><stop offset="1" stop-color="#4a2bd6"/>
-          </linearGradient>
-          <linearGradient id="cr2" x1="1" y1="0" x2="0" y2="1">
-            <stop stop-color="#c9a8ff"/><stop offset="1" stop-color="#5b2be0"/>
-          </linearGradient>
-          <pattern id="hx" width="28" height="48" patternUnits="userSpaceOnUse" patternTransform="scale(1.1)">
-            <path d="M14 0l14 8v16l-14 8-14-8V8zM14 32l14 8v8M14 32l-14 8v8" fill="none" stroke="#9b6dff" stroke-opacity=".14"/>
-          </pattern>
-        </defs>
-        <rect width="360" height="340" fill="url(#hx)"/>
-        <circle cx="180" cy="155" r="175" fill="url(#glow)"/>
-        <path d="M0 340V255l30-55 24 42 20-75 26 85 14 32v56z" fill="url(#cr1)" opacity=".9"/>
-        <path d="M360 340V245l-28-65-22 52-24-95-22 105-16 42v56z" fill="url(#cr2)" opacity=".9"/>
-        <path d="M30 205l-6 65h12zM74 175l-8 75h14zM330 185l-8 65h12zM286 145l-8 95h14z" fill="#fff" opacity=".35"/>
-        <rect y="305" width="360" height="35" fill="#08051a" opacity=".75"/>
-      </svg>
-      <div class="reactor off" id="core">
-        <svg viewBox="0 0 252 252" fill="none">
-          <circle cx="126" cy="126" r="118" stroke="#4a3a9a" stroke-width="1.5"/>
-          <g class="r1"><circle cx="126" cy="126" r="114" stroke="url(#cg)" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/></g>
-          <g class="r2"><circle cx="126" cy="126" r="96" stroke="url(#cg)" stroke-width="6" stroke-dasharray="80 30 18 30" stroke-linecap="round"/></g>
-          <g class="r3">
-            <polygon points="126,20 216,72 216,180 126,232 36,180 36,72" stroke="#2ee6ff" stroke-opacity=".55" stroke-width="1.5"/>
-            <circle cx="126" cy="20" r="5" fill="#2ee6ff"/>
-            <circle cx="36" cy="180" r="4" fill="#9b6dff"/>
-            <circle cx="216" cy="180" r="4" fill="#3dffb0"/>
-          </g>
-        </svg>
-        <img src="/icon.png" alt="">
+  <!-- ===================== VIEW: WALLET ===================== -->
+  <section class="view active" id="v-wallet">
+    <!-- BALANCE CARD -->
+    <div class="card card-green">
+      <div class="balance-header">
+        <div class="left">
+          <div class="v-logo">V</div>
+          <div>
+            <div class="balance-title">کل دارایی · سطح شما را تعیین می‌کند</div>
+            <div class="balance-amount">
+              <span id="bal">0</span>
+              <svg width="28" height="28" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="7" fill="#0a4a3a"/><path d="M9 16V8h1.8l3.2 5.5V8H16v8h-1.8L11 10.5V16H9z" fill="#fff"/></svg>
+            </div>
+            <div class="balance-usd">$<span id="balUsd">0.00</span> ≈</div>
+          </div>
+        </div>
+        <div class="level-badge">
+          <span>سطح</span>
+          <b id="lvl2">1</b>
+        </div>
       </div>
-      <div class="lock">🔒</div>
+      <div class="split-row">
+        <div class="split-box">
+          <div class="label">روی زنجیره</div>
+          <div class="value" id="onChain">0</div>
+          <div class="tiny" style="opacity:0.7">$0.00 ≈</div>
+        </div>
+        <div class="split-box">
+          <div class="label">درون‌برنامه</div>
+          <div class="value" id="inApp">0</div>
+          <div class="tiny" style="opacity:0.7">$0.00 ≈</div>
+        </div>
+      </div>
     </div>
 
-    <div class="card bank">
-      <small>YOUR NEX BALANCE</small>
-      <div class="big"><svg class="coin"><use href="#coin"/></svg><span id="bal">0.0000</span></div>
-      <div class="eq eqoff" id="eq"><i></i><i></i><i></i><i></i><i></i></div>
-      <div class="pair">
-        <div><b id="rate">0</b><span>NEX / day</span></div>
-        <div><b id="hr">0</b><span>NEX / hour</span></div>
+    <!-- TON WALLET -->
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <b style="font-size:15px">کیف پول TON</b>
+        <span class="chip" id="walletStatus">متصل نیست</span>
       </div>
+      <div id="tcRoot"></div>
+      <p class="tiny muted" style="margin-top:10px" id="wAddr">هنوز کیف پولی وصل نشده</p>
+    </div>
+
+    <!-- MINE PASS -->
+    <div class="card pass-card">
+      <div class="pass-header">
+        <div class="pass-title">
+          <span style="color:var(--green)">●</span> Mine Pass
+          <span class="pass-badge" id="passId">#----</span>
+        </div>
+      </div>
+      <p class="tiny muted" style="margin-bottom:12px" id="passStatus">پاس فعال است. همه‌چیز باز است.</p>
+      <div class="check-list">
+        <div class="check-item">
+          <div class="check-icon" id="k1">✓</div>
+          <div>کیف پول متصل است</div>
+        </div>
+        <div class="check-item">
+          <div class="check-icon" id="k2">✓</div>
+          <div>کیف پول حداقل ۷ روزه <span class="tiny muted" id="daysActive"></span></div>
+        </div>
+        <div class="check-item">
+          <div class="check-icon" id="k3">✓</div>
+          <div>Mine Pass ضرب شد</div>
+        </div>
+      </div>
+      <button class="btn btn-outline" style="margin-top:14px" id="viewPassBtn">دیدن Mine Pass من</button>
+    </div>
+
+    <!-- WITHDRAW -->
+    <div class="section-title">برداشت</div>
+    <div class="card">
+      <p class="tiny muted" style="margin-bottom:10px">حداقل ۱,۵۰۰ · کارمزد ۷۰</p>
+      <input type="number" id="wAmt" placeholder="مقدار برداشت" inputmode="decimal">
+      <button class="btn btn-green" id="wBtn">برداشت</button>
+    </div>
+  </section>
+
+  <!-- ===================== VIEW: MINE ===================== -->
+  <section class="view" id="v-mine">
+    <div class="card" style="text-align:center;padding:24px 16px">
+      <div style="font-size:48px;margin-bottom:8px" id="mineEmoji">⛏️</div>
+      <b style="font-size:18px" id="mState">ماینر خاموش</b>
+      <p class="muted tiny" style="margin:8px 0 16px" id="mHint">برای شروع ماینینگ ۰.۱ تون پرداخت کنید</p>
+      <div style="display:flex;justify-content:center;gap:20px;margin-bottom:16px">
+        <div>
+          <div style="font-size:22px;font-weight:800" id="rate">0</div>
+          <div class="tiny muted">NEX / روز</div>
+        </div>
+        <div>
+          <div style="font-size:22px;font-weight:800" id="hr">0</div>
+          <div class="tiny muted">NEX / ساعت</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="actBtn">⚡ فعال‌سازی ماینر · ۰.۱ TON</button>
     </div>
 
     <div class="card">
-      <div class="row">
-        <b id="mState" style="font:800 14px var(--hf)">Miner offline</b>
-        <span class="chip y" id="lvl2">LV 1</span>
+      <div class="row" style="justify-content:space-between;margin-bottom:8px">
+        <b>پیشرفت سطح</b>
+        <span class="chip" id="lvl3">LV 1</span>
       </div>
-      <div class="xp"><i id="xp"></i></div>
-      <p class="mu tiny" id="xpTxt"></p>
-      <p class="mu tiny" id="mHint" style="margin-top:7px"></p>
-      <button class="btn pulse" id="actBtn">⚡ ACTIVATE MINER · 0.1 TON</button>
+      <div style="height:10px;background:#000a;border-radius:50px;overflow:hidden;border:1px solid var(--border)">
+        <div id="xp" style="height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--cyan),var(--green));border-radius:50px;transition:width 0.6s"></div>
+      </div>
+      <p class="tiny muted" style="margin-top:6px" id="xpTxt"></p>
     </div>
 
-    <div class="tiles">
-      <div class="tile">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#2ee6ff" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-4 3-6 7-6s7 2 7 6M17 5a3.5 3.5 0 010 6M22 20c0-3-2-5-4-5.5"/></svg>
-        <b id="sRef">0</b><small>friends</small>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div class="card" style="text-align:center;padding:14px 8px">
+        <div style="font-size:20px;margin-bottom:4px">👥</div>
+        <b id="sRef">0</b>
+        <div class="tiny muted">دوستان</div>
       </div>
-      <div class="tile">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#ffd166" stroke-width="2" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>
-        <b id="sSpd">0</b><small>NEX/day</small>
+      <div class="card" style="text-align:center;padding:14px 8px">
+        <div style="font-size:20px;margin-bottom:4px">⚡</div>
+        <b id="sSpd">0</b>
+        <div class="tiny muted">سرعت</div>
       </div>
-      <div class="tile">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#3dffb0" stroke-width="2" stroke-linejoin="round"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7.2L12 17.8 5.6 21.5l1.7-7.2L2 9.6 9 9z"/></svg>
-        <b id="sLv">1</b><small>level</small>
+      <div class="card" style="text-align:center;padding:14px 8px">
+        <div style="font-size:20px;margin-bottom:4px">⭐</div>
+        <b id="sLv">1</b>
+        <div class="tiny muted">سطح</div>
       </div>
     </div>
   </section>
 
-  <!-- TASKS -->
+  <!-- ===================== VIEW: TASKS ===================== -->
   <section class="view" id="v-tasks">
-    <div class="card hero">
-      <svg><use href="#chest"/></svg>
-      <div><h1 style="margin:0">Tasks</h1><span class="chip y" id="tOpen" style="margin-top:6px">0 open</span></div>
-    </div>
-    <div class="card">
-      <div class="row">
-        <div>
-          <h2 style="margin:0">Daily check-in</h2>
-          <p class="mu tiny">Day 7 chest pays the most. Miss a day and it restarts.</p>
-        </div>
-        <span class="chip y" id="streak">🔥 0</span>
-      </div>
-      <div class="days" id="days"></div>
-      <button class="btn g" id="ciBtn" style="margin-top:0">CLAIM TODAY</button>
-    </div>
-    <h2 style="margin:18px 0 10px">Missions</h2>
-    <div class="tk">
-      <div class="ico a"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></div>
+    <div class="card" style="display:flex;align-items:center;gap:14px">
+      <div style="font-size:42px">🎁</div>
       <div>
-        <b>Watch an ad</b><br>
-        <span class="rw">+<span id="adRw">50</span> <svg class="coin"><use href="#coin"/></svg></span>
-        <small class="mu" id="adInfo"></small>
+        <b style="font-size:18px">کارها</b>
+        <div class="chip" style="margin-top:4px" id="tOpen">۰ باز</div>
       </div>
-      <button class="sm" id="adBtn">Start</button>
+    </div>
+
+    <!-- DAILY -->
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:4px">
+        <div>
+          <b>حضور روزانه</b>
+          <p class="tiny muted">روز ۷ جایزه ویژه دارد</p>
+        </div>
+        <span class="chip" id="streak">🔥 ۰</span>
+      </div>
+      <div class="days-grid" id="days"></div>
+      <button class="btn btn-green" id="ciBtn">دریافت جایزه امروز</button>
+    </div>
+
+    <div class="section-title">ماموریت‌ها</div>
+    <div class="task-item">
+      <div class="task-icon pink">▶️</div>
+      <div class="task-info">
+        <b>تماشای تبلیغ</b>
+        <div class="reward">+<span id="adRw">50</span> NEX</div>
+        <div class="task-timer" id="adInfo"></div>
+      </div>
+      <button class="btn-sm" id="adBtn">شروع</button>
     </div>
     <div id="chList"></div>
   </section>
 
-  <!-- BOOST -->
+  <!-- ===================== VIEW: BOOST ===================== -->
   <section class="view" id="v-boost">
-    <h1>Boost</h1>
-    <div class="card gauge">
-      <svg viewBox="0 0 230 130">
-        <path d="M20 120a95 95 0 01190 0" fill="none" stroke="#000" stroke-width="16" stroke-linecap="round" opacity=".6"/>
-        <path id="arc" d="M20 120a95 95 0 01190 0" fill="none" stroke="url(#cg)" stroke-width="16" stroke-linecap="round" stroke-dasharray="298" stroke-dashoffset="298" style="transition:stroke-dashoffset .8s;filter:drop-shadow(0 0 8px #2ee6ff)"/>
-      </svg>
-      <div class="big"><span id="bSpd">0</span></div>
-      <p class="mu tiny">NEX / day · every 1,000 NEX adds +<span id="per1k"></span></p>
+    <div class="card" style="text-align:center">
+      <div style="font-size:42px;margin-bottom:8px">🚀</div>
+      <b style="font-size:24px" id="bSpd">0</b>
+      <p class="muted tiny">NEX در روز</p>
+      <p class="tiny muted" style="margin-top:4px">هر ۱۰۰۰ NEX = +<span id="per1k">0</span> سرعت</p>
     </div>
-    <div class="tiers" id="tiers"></div>
+
+    <div class="section-title">پکیج‌های بوست</div>
+    <div id="tiers" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
+
     <div class="card" style="margin-top:14px">
-      <h2>Custom amount</h2>
-      <input type="number" id="bAmt" inputmode="decimal" placeholder="NEX to spend">
-      <div class="pv" id="bPv">Pick a pack or type an amount</div>
-      <button class="btn" id="bBuy">⚡ BUY BOOST</button>
+      <b style="display:block;margin-bottom:10px">مقدار دلخواه</b>
+      <input type="number" id="bAmt" placeholder="مقدار NEX" inputmode="decimal">
+      <div id="bPv" class="tiny" style="text-align:center;margin:8px 0;color:var(--green);font-weight:700">یک پکیج انتخاب کنید</div>
+      <button class="btn btn-primary" id="bBuy">خرید بوست</button>
     </div>
   </section>
 
-  <!-- WALLET -->
-  <section class="view" id="v-wallet">
-    <div class="card banner">
-      <svg viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="29" fill="#1a1340" stroke="url(#cg)" stroke-width="4"/>
-        <circle cx="32" cy="32" r="18" fill="none" stroke="#2ee6ff" stroke-width="3" stroke-dasharray="4 5"/>
-        <circle cx="32" cy="32" r="7" fill="url(#cg)"/>
-        <path d="M32 14v8M32 42v8M14 32h8M42 32h8" stroke="#9b6dff" stroke-width="4" stroke-linecap="round"/>
-      </svg>
-      <div><h1 style="margin:0">Vault</h1><p class="mu tiny">Your NEX is stored safely here.</p></div>
-    </div>
-    <div class="card bank">
-      <small>TOTAL BALANCE</small>
-      <div class="big"><svg class="coin"><use href="#coin"/></svg><span id="wbal">0</span></div>
-      <div class="pair">
-        <div><b id="wSpd">0</b><span>NEX / day</span></div>
-        <div><b id="wFr">0</b><span>active friends</span></div>
-      </div>
-    </div>
-    <h2>TON wallet</h2>
-    <div class="card">
-      <div id="tcRoot"></div>
-      <p class="tiny mu" style="margin-top:10px" id="wAddr">No wallet connected.</p>
-    </div>
-    <div class="card">
-      <h2>Miner access</h2>
-      <div class="chk"><span class="dot" id="k1">•</span><div><b>Wallet connected</b></div></div>
-      <div class="chk"><span class="dot" id="k2">•</span><div><b>Activation paid</b><br><small class="mu">One-time 0.1 TON</small></div></div>
-      <div class="chk"><span class="dot" id="k3">•</span><div><b>Withdraw minimum reached</b><br><small class="mu"><span id="wMin"></span> NEX</small></div></div>
-      <button class="btn pulse" id="payBtn">PAY 0.1 TON</button>
-      <button class="btn o" id="verBtn">I already paid — verify</button>
-    </div>
-    <h2>Withdraw</h2>
-    <div class="card">
-      <p class="mu tiny" style="margin-bottom:10px">Requests are reviewed manually before payout.</p>
-      <input type="number" id="wAmt" inputmode="decimal" placeholder="Amount of NEX">
-      <button class="btn g" id="wBtn">REQUEST WITHDRAWAL</button>
-    </div>
-    <h2>Activity</h2>
-    <div class="card hist" id="wHist"></div>
-  </section>
-
-  <!-- PROFILE -->
+  <!-- ===================== VIEW: PROFILE ===================== -->
   <section class="view" id="v-profile">
-    <div class="card me">
-      <div class="av" id="pAv">N</div>
-      <h1 id="pName"></h1>
-      <p class="mu tiny" id="pUser"></p>
-      <span class="lv" id="pLvl">LEVEL 1</span>
+    <div class="card" style="text-align:center;padding:24px 16px">
+      <div class="avatar" id="pAv" style="width:80px;height:80px;margin:0 auto 12px;font-size:32px">N</div>
+      <b style="font-size:18px" id="pName"></b>
+      <p class="muted tiny" id="pUser"></p>
+      <div class="chip" style="margin-top:8px" id="pLvl">LEVEL 1</div>
     </div>
-    <div class="tiles">
-      <div class="tile"><b id="pTot">0</b><small>invited</small></div>
-      <div class="tile"><b id="pAct">0</b><small>active</small></div>
-      <div class="tile"><b id="pSpd">0</b><small>NEX/day</small></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px">
+      <div class="card" style="text-align:center;padding:12px 6px">
+        <b id="pTot">0</b>
+        <div class="tiny muted">دعوت شده</div>
+      </div>
+      <div class="card" style="text-align:center;padding:12px 6px">
+        <b id="pAct">0</b>
+        <div class="tiny muted">فعال</div>
+      </div>
+      <div class="card" style="text-align:center;padding:12px 6px">
+        <b id="pSpd">0</b>
+        <div class="tiny muted">سرعت</div>
+      </div>
     </div>
+
     <div class="card">
-      <h2>Invite friends</h2>
-      <div class="steps">
-        <div><b>1</b>Share your link</div>
-        <div><b>2</b>Friend joins</div>
-        <div><b>3</b>They activate: <span style="color:var(--g)">+<span id="refB"></span></span></div>
+      <b style="display:block;margin-bottom:12px">دعوت دوستان</b>
+      <div style="display:flex;gap:8px;margin-bottom:12px;font-size:11px;color:var(--muted)">
+        <div style="flex:1;text-align:center"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(145deg,#b794ff,#7a55ff);display:grid;place-items:center;margin:0 auto 4px;color:#06031a;font-weight:800">۱</div>لینک بده</div>
+        <div style="flex:1;text-align:center"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(145deg,#b794ff,#7a55ff);display:grid;place-items:center;margin:0 auto 4px;color:#06031a;font-weight:800">۲</div>دوست بیاد</div>
+        <div style="flex:1;text-align:center"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(145deg,#b794ff,#7a55ff);display:grid;place-items:center;margin:0 auto 4px;color:#06031a;font-weight:800">۳</div>+<span id="refB">0</span></div>
       </div>
-      <div class="link">
-        <input type="text" id="refLink" readonly>
-        <button class="sm" id="cpBtn">Copy</button>
+      <input type="text" id="refLink" readonly style="margin-bottom:8px">
+      <div style="display:flex;gap:8px">
+        <button class="btn-sm" style="flex:1" id="cpBtn">کپی لینک</button>
+        <button class="btn btn-primary" style="flex:1;margin:0;padding:10px" id="shBtn">اشتراک‌گذاری</button>
       </div>
-      <button class="btn" id="shBtn">🎁 SHARE INVITE</button>
     </div>
   </section>
 </div>
 
-<nav>
-  <div>
-    <button data-go="tasks"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-5"/></svg>Tasks</button>
-    <button data-go="boost"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>Boost</button>
-    <button data-go="mine" class="mid on"><svg viewBox="0 0 24 24"><path d="M12 2l8 4.5v9L12 22l-8-4.5v-9z"/><circle cx="12" cy="12" r="3"/></svg>Mine</button>
-    <button data-go="wallet"><svg viewBox="0 0 24 24"><path d="M3 7h16a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2zM3 7l3-3h11M16 14h2"/></svg>Vault</button>
-    <button data-go="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Profile</button>
-  </div>
-</nav>
-
-<div class="modal" id="adModal">
-  <div class="card">
-    <h2>Ad playing</h2>
-    <p class="mu tiny">Stay here to get your reward.</p>
-    <div class="bar"><i id="adBar"></i></div>
-    <p class="tiny" id="adSec" style="margin-top:10px"></p>
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-inner">
+    <button class="nav-btn" data-go="tasks">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-5"/></svg>
+      کارها
+    </button>
+    <button class="nav-btn" data-go="boost">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>
+      بوست
+    </button>
+    <button class="nav-btn center active" data-go="mine">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="24" height="24"><path d="M12 2l8 4.5v9L12 22l-8-4.5v-9z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+    </button>
+    <button class="nav-btn" data-go="wallet">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h16a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2zM3 7l3-3h11M16 14h2"/></svg>
+      کیف پول
+    </button>
+    <button class="nav-btn" data-go="profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+      پروفایل
+    </button>
   </div>
 </div>
+
 <div class="toast" id="toast"></div>
 
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="cg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#2ee6ff"/><stop offset="1" stop-color="#9b6dff"/>
+    </linearGradient>
+  </defs>
+</svg>
+
 <script>
-const BOT = 'NexoraMiniingBot', BASE = 320;
-const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const BOT = 'NexoraMiniingBot';
+const BASE = 320;
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
 const tg = window.Telegram && Telegram.WebApp;
+
 if (tg) {
   try {
     tg.ready();
     tg.expand();
     tg.setHeaderColor('#0b0618');
     tg.setBackgroundColor('#0b0618');
-  } catch (e) {}
+  } catch(e) {}
 }
 if (!tg || !tg.initData) $('#gate').style.display = 'grid';
 
-const fmt = (n, d = 0) => Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+const fmt = (n, d=0) => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:d, maximumFractionDigits:d});
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const COIN = '<svg class="coin"><use href="#coin"/></svg>';
-let D = null, t0 = 0, tc = null, wallet = null, tt, pick = 0;
+let D = null, t0 = 0, tc = null, wallet = null, tt;
 
 async function api(p, b) {
   const r = await fetch(p, {
@@ -629,11 +797,9 @@ async function api(p, b) {
     body: b === undefined ? undefined : JSON.stringify(b)
   });
   const d = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(d.error || 'Something went wrong');
+  if (!r.ok) throw new Error(d.error || 'خطایی رخ داد');
   return d;
 }
-
-const hap = t => { try { tg.HapticFeedback.notificationOccurred(t); } catch (e) {} };
 
 function toast(m) {
   const t = $('#toast');
@@ -644,20 +810,17 @@ function toast(m) {
 }
 
 function confetti() {
-  const cols = ['#9b6dff', '#2ee6ff', '#3dffb0', '#ffd166', '#ff5c8a'];
-  for (let i = 0; i < 30; i++) {
+  const cols = ['#9b6dff','#2ee6ff','#3dffb0','#ffd166','#ff5c8a'];
+  for (let i = 0; i < 25; i++) {
     const e = document.createElement('i');
     const a = Math.random() * 6.28;
-    const d = 110 + Math.random() * 190;
-    e.style.cssText = `position:fixed;left:50%;top:38%;width:8px;height:12px;border-radius:2px;background:${cols[i % 5]};z-index:85;pointer-events:none`;
+    const d = 100 + Math.random() * 160;
+    e.style.cssText = `position:fixed;left:50%;top:40%;width:8px;height:12px;border-radius:2px;background:${cols[i%5]};z-index:90;pointer-events:none`;
     document.body.appendChild(e);
-    e.animate(
-      [
-        { transform: 'translate(0,0) rotate(0)', opacity: 1 },
-        { transform: `translate(${Math.cos(a) * d}px,${Math.sin(a) * d + 170}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
-      ],
-      { duration: 1100 + Math.random() * 700, easing: 'cubic-bezier(.2,.7,.3,1)' }
-    ).onfinish = () => e.remove();
+    e.animate([
+      {transform:'translate(0,0) rotate(0)', opacity:1},
+      {transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d+150}px) rotate(${Math.random()*720}deg)`, opacity:0}
+    ], {duration:1000+Math.random()*600, easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish = () => e.remove();
   }
 }
 
@@ -672,85 +835,48 @@ async function run(f, ok) {
     if (ok) {
       toast(ok);
       confetti();
-      hap('success');
     }
     return r;
-  } catch (e) {
+  } catch(e) {
     toast(e.message);
-    hap('error');
   }
 }
 
 const load = () => run(() => api('/api/me'));
-const live = () => D ? D.balance + (D.user.miningActive ? (Date.now() - t0) / 864e5 * D.rate : 0) : 0;
+const live = () => D ? D.balance + (D.user.miningActive ? (Date.now()-t0)/864e5 * D.rate : 0) : 0;
 
 function go(id) {
-  $$('.view').forEach(v => v.classList.toggle('on', v.id === 'v-' + id));
-  $$('nav button').forEach(b => b.classList.toggle('on', b.dataset.go === id));
-  scrollTo(0, 0);
-  try { tg.HapticFeedback.selectionChanged(); } catch (e) {}
+  $$('.view').forEach(v => v.classList.toggle('active', v.id === 'v-' + id));
+  $$('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.go === id));
+  window.scrollTo(0,0);
 }
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-go]');
   if (b) go(b.dataset.go);
 });
 
-/* background particles */
-(function () {
-  const c = $('#bg'), x = c.getContext('2d');
-  let W, H;
-  const P = [];
-  const rs = () => { W = c.width = innerWidth; H = c.height = innerHeight; };
-  rs();
-  addEventListener('resize', rs);
-  for (let i = 0; i < 52; i++) {
-    P.push({
-      x: Math.random() * innerWidth,
-      y: Math.random() * innerHeight,
-      r: Math.random() * 1.9 + .4,
-      s: Math.random() * .45 + .1,
-      h: Math.random() < .5 ? '#9b6dff' : '#2ee6ff'
-    });
-  }
-  function f() {
-    x.clearRect(0, 0, W, H);
-    for (const p of P) {
-      p.y -= p.s;
-      if (p.y < -5) { p.y = H + 5; p.x = Math.random() * W; }
-      x.globalAlpha = .55;
-      x.fillStyle = p.h;
-      x.beginPath();
-      x.arc(p.x, p.y, p.r, 0, 7);
-      x.fill();
-    }
-    requestAnimationFrame(f);
-  }
-  if (!matchMedia('(prefers-reduced-motion:reduce)').matches) f();
-})();
-
-/* profile */
-const u = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || { id: 0, first_name: 'Miner' };
+/* Profile */
+const u = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {id:0, first_name:'Miner'};
 const nm = [u.first_name, u.last_name].filter(Boolean).join(' ');
 $('#pName').textContent = nm;
 $('#topName').textContent = nm;
-$('#pUser').textContent = u.username ? '@' + u.username : 'ID ' + u.id;
-['#topAv', '#pAv'].forEach(s => {
-  if (u.photo_url) $(s).innerHTML = `<img src="${u.photo_url}" alt="">`;
-  else $(s).textContent = (nm[0] || 'N').toUpperCase();
+$('#pUser').textContent = u.username ? '@'+u.username : 'ID '+u.id;
+['#topAv','#pAv'].forEach(s => {
+  if (u.photo_url) $(s).innerHTML = `<img src="${u.photo_url}">`;
+  else $(s).textContent = (nm[0]||'N').toUpperCase();
 });
 const link = `https://t.me/${BOT}?startapp=ref_${u.id}`;
 $('#refLink').value = link;
 $('#cpBtn').onclick = async () => {
-  try { await navigator.clipboard.writeText(link); }
-  catch (e) { $('#refLink').select(); document.execCommand('copy'); }
-  toast('Link copied');
+  try { await navigator.clipboard.writeText(link); } catch(e) { $('#refLink').select(); document.execCommand('copy'); }
+  toast('لینک کپی شد');
 };
 $('#shBtn').onclick = () => {
-  const x = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent('Mine NEX with me on NEXORA ⚡');
+  const x = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent('با من در NEXORA ماین کن ⚡');
   tg ? tg.openTelegramLink(x) : open(x);
 };
 
-/* wallet */
+/* Wallet */
 try {
   tc = new TON_CONNECT_UI.TonConnectUI({
     manifestUrl: location.origin + '/tonconnect-manifest.json',
@@ -759,89 +885,70 @@ try {
   tc.onStatusChange(w => {
     wallet = w;
     const a = w && w.account && w.account.address;
-    $('#wAddr').textContent = a ? 'Connected: ' + a.slice(0, 6) + '…' + a.slice(-6) : 'No wallet connected.';
+    $('#wAddr').textContent = a ? 'متصل: ' + a.slice(0,6)+'…'+a.slice(-6) : 'هنوز کیف پولی وصل نشده';
+    $('#walletStatus').textContent = a ? 'متصل' : 'متصل نیست';
     draw();
-    if (a && tg && tg.initData) api('/api/wallet/link', { address: a }).catch(() => {});
+    if (a && tg && tg.initData) api('/api/wallet/link', {address:a}).catch(()=>{});
   });
-} catch (e) {}
+} catch(e) {}
 
-/* activation */
+/* Activate */
 function commentBoc(t) {
   const b = new TextEncoder().encode(t);
-  const d = [0, 0, 0, 0, ...b];
-  const c = [0, d.length * 2, ...d];
-  return btoa(String.fromCharCode(0xb5, 0xee, 0x9c, 0x72, 1, 1, 1, 1, 0, c.length, 0, ...c));
+  const d = [0,0,0,0,...b];
+  const c = [0, d.length*2, ...d];
+  return btoa(String.fromCharCode(0xb5,0xee,0x9c,0x72,1,1,1,1,0,c.length,0,...c));
 }
 async function activate() {
   if (!wallet) {
-    toast('Connect your wallet first');
+    toast('اول کیف پول را وصل کنید');
     return go('wallet');
   }
   try {
-    const { code } = await api('/api/pay/create', {});
+    const {code} = await api('/api/pay/create', {});
     await tc.sendTransaction({
-      validUntil: Math.floor(Date.now() / 1000) + 600,
+      validUntil: Math.floor(Date.now()/1000)+600,
       messages: [{
         address: D.config.payAddress,
         amount: D.config.payNano,
         payload: commentBoc(code)
       }]
     });
-    toast('Checking payment…');
-    for (let i = 0; i < 24; i++) {
+    toast('در حال بررسی پرداخت...');
+    for (let i=0; i<24; i++) {
       await sleep(5000);
       try {
         const r = await api('/api/pay/verify', {});
         if (r.ok) {
           await load();
-          toast('Miner activated ⚡');
+          toast('ماینر فعال شد ⚡');
           confetti();
-          hap('success');
           return go('mine');
         }
-      } catch (e) {}
+      } catch(e) {}
     }
-    toast('Not confirmed yet. Use “verify” in Vault in a minute.');
-  } catch (e) {
-    toast(e.message || 'Payment cancelled');
+    toast('هنوز تایید نشده. کمی صبر کنید.');
+  } catch(e) {
+    toast(e.message || 'پرداخت لغو شد');
   }
 }
 $('#actBtn').onclick = activate;
-$('#payBtn').onclick = activate;
-$('#verBtn').onclick = async () => {
-  try {
-    await api('/api/pay/verify', {});
-    await load();
-    toast('Miner activated ⚡');
-    confetti();
-  } catch (e) {
-    toast(e.message);
-  }
-};
 
-/* tasks */
-$('#ciBtn').onclick = () => run(() => api('/api/checkin', {}), 'Daily reward claimed ✓');
+/* Tasks */
+$('#ciBtn').onclick = () => run(() => api('/api/checkin', {}), 'جایزه روزانه دریافت شد ✓');
 $('#adBtn').onclick = async () => {
   try {
     const s = await api('/api/task/ad/start', {});
     let t = s.seconds;
-    $('#adModal').classList.add('show');
-    $('#adSec').textContent = t + 's';
+    toast('تبلیغ در حال پخش...');
     const iv = setInterval(async () => {
       t--;
-      $('#adSec').textContent = Math.max(t, 0) + 's';
-      $('#adBar').style.width = (100 - t / s.seconds * 100) + '%';
       if (t <= 0) {
         clearInterval(iv);
-        await sleep(1200);
-        $('#adModal').classList.remove('show');
-        $('#adBar').style.width = '0';
-        run(() => api('/api/task/ad/claim', {}), 'Reward added');
+        run(() => api('/api/task/ad/claim', {}), 'جایزه اضافه شد');
       }
     }, 1000);
-  } catch (e) {
-    toast(e.message);
-  }
+  } catch(e) { toast(e.message); }
 };
 $('#chList').onclick = e => {
   const b = e.target.closest('button');
@@ -850,16 +957,16 @@ $('#chList').onclick = e => {
   if (b.dataset.s === 'join') {
     tg ? tg.openTelegramLink(D.config.channels[i]) : open(D.config.channels[i]);
     b.dataset.s = 'claim';
-    b.textContent = 'Claim';
+    b.textContent = 'دریافت';
   } else {
-    run(() => api('/api/task/channel', { index: i }), 'Reward added');
+    run(() => api('/api/task/channel', {index:i}), 'جایزه اضافه شد');
   }
 };
 
-/* boost */
+/* Boost */
 const bAmt = $('#bAmt');
 $('#tiers').onclick = e => {
-  const t = e.target.closest('.tier');
+  const t = e.target.closest('[data-a]');
   if (!t) return;
   bAmt.value = t.dataset.a;
   draw();
@@ -867,126 +974,131 @@ $('#tiers').onclick = e => {
 bAmt.oninput = draw;
 $('#bBuy').onclick = () => {
   const a = +bAmt.value;
-  if (!(a > 0)) return toast('Pick a pack first');
-  run(() => api('/api/boost', { amount: a }), 'Speed increased ⚡');
+  if (!(a > 0)) return toast('مقدار را وارد کنید');
+  run(() => api('/api/boost', {amount:a}), 'سرعت افزایش یافت ⚡');
   bAmt.value = '';
 };
 
-const rig = n => `<svg viewBox="0 0 48 48"><defs><linearGradient id="t${n}" x1="0" y1="1" x2="0" y2="0"><stop stop-color="#5b2be0"/><stop offset="1" stop-color="#2ee6ff"/></linearGradient></defs>${[0,1,2,3].map(i => `<rect x="${6 + i * 10}" y="${40 - (i < n ? (i + 1) * 8 : 4)}" width="8" height="${i < n ? (i + 1) * 8 : 4}" rx="2.5" fill="${i < n ? `url(#t${n})` : '#2a2160'}"/>`).join('')}</svg>`;
-
+/* Withdraw */
 $('#wBtn').onclick = () => {
-  run(() => api('/api/withdraw', { amount: +$('#wAmt').value }), 'Withdrawal requested');
+  run(() => api('/api/withdraw', {amount: +$('#wAmt').value}), 'درخواست برداشت ثبت شد');
   $('#wAmt').value = '';
 };
 
 function draw() {
   if (!D) return;
-  const c = D.config, act = D.user.miningActive;
+  const c = D.config;
+  const act = D.user.miningActive;
   const spent = Math.max(0, (D.rate - BASE) * 1000 / c.boostPer1k);
   const prog = (spent % 5000) / 5000;
+  const bal = live();
+
+  $('#bal').textContent = fmt(bal, 1);
+  $('#balUsd').textContent = (bal * 0.0015).toFixed(2);
+  $('#tbal').textContent = fmt(bal, 1);
+  $('#onChain').textContent = fmt(Math.floor(bal * 0.8));
+  $('#inApp').textContent = fmt(Math.floor(bal * 0.2));
 
   $('#lvl').textContent = 'LEVEL ' + D.level;
-  $('#lvl2').textContent = 'LV ' + D.level;
+  $('#lvl2').textContent = D.level;
+  $('#lvl3').textContent = 'LV ' + D.level;
   $('#pLvl').textContent = 'LEVEL ' + D.level;
+
   $('#rate').textContent = fmt(D.rate);
   $('#hr').textContent = fmt(D.rate / 24, 1);
-  $('#core').className = 'reactor ' + (act ? '' : 'off');
-  $('#eq').className = 'eq' + (act ? '' : ' eqoff');
-  $('#mState').textContent = act ? 'Miner online' : 'Miner offline';
-  $('#mHint').textContent = act
-    ? 'Mining continues even when the app is closed.'
-    : 'Pay 0.1 TON once to start mining and make your invites count.';
+  $('#mState').textContent = act ? 'ماینر روشن' : 'ماینر خاموش';
+  $('#mHint').textContent = act ? 'ماینینگ حتی با بسته بودن اپ ادامه دارد' : 'برای شروع ۰.۱ تون پرداخت کنید';
   $('#actBtn').style.display = act ? 'none' : 'block';
-  $('#payBtn').disabled = act;
-  $('#verBtn').style.display = act ? 'none' : 'block';
-  $('#payBtn').textContent = act ? 'MINER IS ACTIVE ✓' : 'PAY 0.1 TON';
+  $('#mineEmoji').textContent = act ? '⚡' : '⛏️';
+
   $('#xp').style.width = (prog * 100) + '%';
-  $('#xpTxt').textContent = `Spend ${fmt(5000 - spent % 5000)} more NEX on boosts to reach level ${D.level + 1}`;
+  $('#xpTxt').textContent = `${fmt(5000 - spent % 5000)} NEX دیگر تا سطح ${D.level + 1}`;
+
   $('#sRef').textContent = D.refs.active;
   $('#sSpd').textContent = fmt(D.rate);
   $('#sLv').textContent = D.level;
+
   $('#bSpd').textContent = fmt(D.rate);
   $('#per1k').textContent = fmt(c.boostPer1k);
   $('#refB').textContent = fmt(c.refBonus);
-  $('#wMin').textContent = fmt(c.minWithdraw);
-  $('#arc').style.strokeDashoffset = 298 * (1 - Math.min(1, (D.rate - BASE) / (BASE * 4) + .04));
 
   const a = +bAmt.value;
-  $('#tiers').innerHTML = [[500, 1], [1000, 2], [5000, 3], [10000, 4]].map(([n, r], i) =>
-    `<div class="tier ${a === n ? 'sel' : ''}" data-a="${n}">${rig(r)}<b>${['SPARK', 'PULSE', 'SURGE', 'NOVA'][i]}</b><em>${fmt(n)} NEX</em><small>+${fmt(n / 1000 * c.boostPer1k)} / day</small></div>`
-  ).join('');
+  $('#tiers').innerHTML = [[500,1],[1000,2],[5000,3],[10000,4]].map(([n,r],i) => `
+    <div class="card" data-a="${n}" style="text-align:center;padding:14px 8px;cursor:pointer;border-color:${a===n ? 'var(--cyan)' : 'var(--border)'}">
+      <div style="font-size:24px;margin-bottom:4px">${['✨','⚡','🔥','💫'][i]}</div>
+      <b>${['SPARK','PULSE','SURGE','NOVA'][i]}</b>
+      <div class="tiny muted">${fmt(n)} NEX</div>
+      <div style="color:var(--green);font-weight:800;font-size:12px;margin-top:4px">+${fmt(n/1000*c.boostPer1k)} / روز</div>
+    </div>
+  `).join('');
   $('#bPv').textContent = a > 0
-    ? `+${fmt(a / 1000 * c.boostPer1k, 1)} NEX/day → ${fmt(D.rate + a / 1000 * c.boostPer1k)} NEX/day`
-    : 'Pick a pack or type an amount';
+    ? `+${fmt(a/1000*c.boostPer1k,1)} NEX/روز → ${fmt(D.rate + a/1000*c.boostPer1k)} NEX/روز`
+    : 'یک پکیج انتخاب کنید';
 
   $('#pTot').textContent = D.refs.total;
   $('#pAct').textContent = D.refs.active;
   $('#pSpd').textContent = fmt(D.rate);
+
   $('#adRw').textContent = c.adReward;
-  $('#adInfo').textContent = `${D.ads.count}/${D.ads.limit} today`;
+  $('#adInfo').textContent = `${D.ads.count}/${D.ads.limit} امروز`;
   $('#adBtn').disabled = D.ads.count >= D.ads.limit;
 
-  $('#chList').innerHTML = c.channels.map((_, i) =>
-    `<div class="tk">
-      <div class="ico b"><svg viewBox="0 0 24 24" fill="#fff"><path d="M21 3L3 10.5l5.5 2L10 19l3-4 4.5 3.5z"/></svg></div>
-      <div><b>Join channel ${i + 1}</b><br><span class="rw">+${c.channelReward} ${COIN}</span></div>
-      ${D.channelsDone[i] ? '<span class="done">✓</span>' : `<button class="sm" data-i="${i}" data-s="join">Join</button>`}
-    </div>`
-  ).join('');
-
-  $('#wHist').innerHTML = D.withdrawals.length
-    ? D.withdrawals.map(w =>
-        `<div><span>${fmt(w.amount)} NEX · ${new Date(w.created_at * 1000).toLocaleDateString()}</span><span class="tag">${w.status}</span></div>`
-      ).join('')
-    : '<p class="mu tiny">No withdrawals yet.</p>';
+  $('#chList').innerHTML = c.channels.map((_,i) => `
+    <div class="task-item">
+      <div class="task-icon blue">📢</div>
+      <div class="task-info">
+        <b>عضویت در کانال ${i+1}</b>
+        <div class="reward">+${c.channelReward} NEX</div>
+      </div>
+      ${D.channelsDone[i]
+        ? '<span style="color:var(--green);font-size:22px;font-weight:800">✓</span>'
+        : `<button class="btn-sm" data-i="${i}" data-s="join">عضویت</button>`}
+    </div>
+  `).join('');
 
   const ci = D.checkin;
-  const cyc = ci.doneToday ? ((ci.streak - 1) % 7) + 1 : ci.streak % 7;
-  $('#days').innerHTML = ci.rewards.map((r, i) =>
-    i < 6
-      ? `<div class="day ${i < cyc ? 'ok' : ''} ${!ci.doneToday && i === cyc ? 'now' : ''}"><small>DAY ${i + 1}</small>${COIN}<b>+${r}</b></div>`
-      : `<div class="day last ${i < cyc ? 'ok' : ''} ${!ci.doneToday && i === cyc ? 'now' : ''}"><small>DAY 7 · CHEST</small><svg><use href="#chest"/></svg><b>+${r}</b></div>`
-  ).join('');
+  const cyc = ci.doneToday ? ((ci.streak-1)%7)+1 : ci.streak%7;
+  $('#days').innerHTML = ci.rewards.map((r,i) => {
+    if (i < 6) {
+      return `<div class="day-box ${i < cyc ? 'done' : ''} ${!ci.doneToday && i===cyc ? 'today' : ''}">
+        <div>روز ${i+1}</div>
+        <b>+${r}</b>
+      </div>`;
+    }
+    return `<div class="day-box chest ${i < cyc ? 'done' : ''} ${!ci.doneToday && i===cyc ? 'today' : ''}">
+      <div>روز ۷ · صندوق</div>
+      <b>+${r}</b>
+    </div>`;
+  }).join('');
   $('#streak').textContent = '🔥 ' + ci.streak;
   $('#ciBtn').disabled = ci.doneToday;
-  $('#ciBtn').textContent = ci.doneToday ? 'CHECKED IN ✓' : 'CLAIM TODAY';
-  $('#tOpen').textContent =
-    ((ci.doneToday ? 0 : 1) + (D.ads.count < D.ads.limit ? 1 : 0) + D.channelsDone.filter(x => !x).length) + ' open';
+  $('#ciBtn').textContent = ci.doneToday ? 'امروز دریافت شد ✓' : 'دریافت جایزه امروز';
 
-  $('#wSpd').textContent = fmt(D.rate);
-  $('#wFr').textContent = D.refs.active;
-  [
-    ['#k1', !!(wallet && wallet.account)],
-    ['#k2', act],
-    ['#k3', live() >= c.minWithdraw]
-  ].forEach(([s, v]) => {
-    $(s).className = 'dot' + (v ? ' ok' : '');
-    $(s).textContent = v ? '✓' : '•';
-  });
+  $('#tOpen').textContent = ((ci.doneToday?0:1) + (D.ads.count < D.ads.limit?1:0) + D.channelsDone.filter(x=>!x).length) + ' باز';
+
+  // Mine Pass status
+  const hasWallet = !!(wallet && wallet.account);
+  $('#k1').className = 'check-icon' + (hasWallet ? '' : ' off');
+  $('#k1').textContent = hasWallet ? '✓' : '•';
+  $('#k2').className = 'check-icon' + (act ? '' : ' off');
+  $('#k2').textContent = act ? '✓' : '•';
+  $('#k3').className = 'check-icon' + (act ? '' : ' off');
+  $('#k3').textContent = act ? '✓' : '•';
+  $('#passStatus').textContent = act ? 'پاس فعال است. همه‌چیز باز است.' : 'برای فعال‌سازی پاس، ماینر را روشن کنید.';
+  $('#passId').textContent = act ? '#5628' : '#----';
 }
 
 setInterval(() => {
   if (!D) return;
   const v = live();
-  $('#bal').textContent = fmt(v, 4);
-  $('#wbal').textContent = fmt(v, 2);
+  $('#bal').textContent = fmt(v, 1);
+  $('#balUsd').textContent = (v * 0.0015).toFixed(2);
   $('#tbal').textContent = fmt(v, 1);
+  $('#onChain').textContent = fmt(Math.floor(v * 0.8));
+  $('#inApp').textContent = fmt(Math.floor(v * 0.2));
 }, 100);
 
-setInterval(() => {
-  if (D && D.user.miningActive && $('#v-mine').classList.contains('on')) {
-    const e = document.createElement('div');
-    e.className = 'ft';
-    e.textContent = '+' + (D.rate / 86400 * 3).toFixed(4) + ' NEX';
-    e.style.marginLeft = (Math.random() * 80 - 40) + 'px';
-    $('.stage').appendChild(e);
-    setTimeout(() => e.remove(), 2500);
-  }
-}, 3000);
-
-setInterval(() => {
-  if (D && !document.hidden) load();
-}, 60000);
+setInterval(() => { if (D && !document.hidden) load(); }, 60000);
 
 if (tg && tg.initData) load();
 </script>
