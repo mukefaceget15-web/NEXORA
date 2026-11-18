@@ -54,6 +54,15 @@ input[type=number],input[type=text]{width:100%;padding:14px;border-radius:14px;b
 .av{width:70px;height:70px;border-radius:50%;background:var(--s2);border:2px solid var(--v);display:grid;place-items:center;font:800 26px var(--hf);overflow:hidden;flex:none}.av img{width:100%;height:100%;object-fit:cover}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}.stats div{background:var(--s1);border:1px solid var(--ln);border-radius:18px;padding:12px;text-align:center}.stats b{display:block;font:700 16px var(--hf)}.stats small{color:var(--mu);font-size:11px}
 .link{display:flex;gap:8px;margin-top:10px}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:14px 0}
+.day{aspect-ratio:1/1.3;border-radius:14px;background:var(--s1);border:1px solid var(--ln);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;color:var(--mu)}
+.day b{font:700 11px var(--hf);color:var(--tx)}.day.ok{border-color:var(--g);background:#3dffb014}.day.ok b{color:var(--g)}
+.day.now{border-color:var(--c);box-shadow:0 0 16px #27e0ff55}.day.last{background:linear-gradient(160deg,#ffd16630,#8b5cff30);border-color:var(--y)}
+.tk{display:flex;align-items:center;gap:12px;padding:14px;border-radius:20px;background:linear-gradient(160deg,var(--s2),var(--s1));border:1px solid var(--ln);margin-bottom:10px;box-shadow:0 4px 0 #0009}
+.tk>div:nth-child(2){flex:1}.ico.pink{background:#ff5c8a22;color:#ff5c8a}.ico.gold{background:#ffd16622;color:var(--y)}
+.chk{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #ffffff14}.chk:first-of-type{border-top:0}
+.dot{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#ffffff14;font-size:14px;flex:none;color:var(--mu)}.dot.ok{background:var(--g);color:#052}
+.sm{box-shadow:0 3px 0 #4a2bb0}
 nav{position:fixed;left:0;right:0;bottom:0;padding:0 14px calc(10px + env(safe-area-inset-bottom,0));z-index:20;pointer-events:none}
 nav div{pointer-events:auto;max-width:492px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;background:#0d0922ee;backdrop-filter:blur(16px);border:1px solid var(--ln);border-radius:26px;padding:8px 6px}
 nav button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;color:var(--mu);font-size:11px;font-weight:700;border-radius:16px}nav span{font-size:20px}
@@ -82,9 +91,13 @@ nav button.mid{margin-top:-26px}nav button.mid span{width:56px;height:56px;borde
   </section>
 
   <section class="view" id="v-tasks">
-    <h1>Tasks</h1><p class="mu tiny" style="margin-bottom:14px">Complete tasks to earn extra NEX.</p>
-    <div class="card"><div class="task row"><div class="ico">▶</div><div><b>Watch an ad</b><br><span class="rw">+<span id="adRw">50</span> NEX</span> <small class="mu" id="adInfo"></small></div><button class="sm" id="adBtn">Start</button></div></div>
-    <div class="card" id="chList"></div>
+    <h1>Tasks</h1>
+    <div class="row" style="margin:6px 0 14px"><span class="chip y" id="tOpen">0 open</span><span class="chip">Earn extra NEX</span></div>
+    <div class="card"><div class="row"><div class="ico gold">▣</div><div><h2 style="margin:0">Daily check-in</h2><p class="mu tiny">Day 7 pays the most. Miss a day and it restarts.</p></div><span class="chip y" id="streak">🔥 0</span></div>
+      <div class="days" id="days"></div><button class="btn" id="ciBtn" style="margin-top:0">CLAIM TODAY</button></div>
+    <h2 style="margin:18px 0 10px">Missions</h2>
+    <div class="tk"><div class="ico pink">▶</div><div><b>Watch an ad</b><br><span class="rw">+<span id="adRw">50</span> NEX</span> <small class="mu" id="adInfo"></small></div><button class="sm" id="adBtn">Start</button></div>
+    <div id="chList"></div>
   </section>
 
   <section class="view" id="v-boost">
@@ -97,13 +110,20 @@ nav button.mid{margin-top:-26px}nav button.mid span{width:56px;height:56px;borde
   </section>
 
   <section class="view" id="v-wallet">
-    <h1>Wallet</h1>
-    <div class="card bank"><small>AVAILABLE</small><div class="big"><span id="wbal">0</span> <em>NEX</em></div><small>Internal balance · paid out after review</small></div>
-    <div class="card"><h2>TON wallet</h2><div id="tcRoot"></div><p class="tiny mu" style="margin-top:10px" id="wAddr">No wallet connected.</p></div>
-    <div class="card"><h2>Miner activation</h2><p class="mu tiny">One-time payment of 0.1 TON. Verified on-chain before your miner starts.</p>
+    <h1>Vault</h1>
+    <div class="card bank"><small>TOTAL BALANCE</small><div class="big"><span id="wbal">0</span> <em>NEX</em></div>
+      <div class="pair"><div><b id="wSpd">0</b><span>NEX / day</span></div><div><b id="wFr">0</b><span>active friends</span></div></div></div>
+    <h2>TON wallet</h2>
+    <div class="card"><div id="tcRoot"></div><p class="tiny mu" style="margin-top:10px" id="wAddr">No wallet connected.</p></div>
+    <div class="card"><h2>Miner access</h2>
+      <div class="chk"><span class="dot" id="k1">•</span><div><b>Wallet connected</b></div></div>
+      <div class="chk"><span class="dot" id="k2">•</span><div><b>Activation paid</b><br><small class="mu">One-time 0.1 TON</small></div></div>
+      <div class="chk"><span class="dot" id="k3">•</span><div><b>Withdraw minimum reached</b><br><small class="mu"><span id="wMin"></span> NEX</small></div></div>
       <button class="btn" id="payBtn">PAY 0.1 TON</button><button class="btn o" id="verBtn">I already paid — verify</button></div>
-    <div class="card"><h2>Withdraw</h2><p class="mu tiny" style="margin-bottom:10px">Minimum <span id="wMin"></span> NEX</p>
-      <input type="number" id="wAmt" inputmode="decimal" placeholder="Amount of NEX"><button class="btn" id="wBtn">REQUEST WITHDRAWAL</button><div class="hist" id="wHist" style="margin-top:8px"></div></div>
+    <h2>Withdraw</h2>
+    <div class="card"><p class="mu tiny" style="margin-bottom:10px">Requests are reviewed manually before payout.</p>
+      <input type="number" id="wAmt" inputmode="decimal" placeholder="Amount of NEX"><button class="btn" id="wBtn">REQUEST WITHDRAWAL</button></div>
+    <h2>Activity</h2><div class="card hist" id="wHist"></div>
   </section>
 
   <section class="view" id="v-profile">
@@ -153,7 +173,7 @@ $('#shBtn').onclick=()=>{const x='https://t.me/share/url?url='+encodeURIComponen
 
 /* wallet */
 try{tc=new TON_CONNECT_UI.TonConnectUI({manifestUrl:location.origin+'/tonconnect-manifest.json',buttonRootId:'tcRoot'});
-tc.onStatusChange(w=>{wallet=w;const a=w&&w.account&&w.account.address;$('#wAddr').textContent=a?'Connected: '+a.slice(0,6)+'…'+a.slice(-6):'No wallet connected.';if(a&&tg&&tg.initData)api('/api/wallet/link',{address:a}).catch(()=>{})})}catch(e){}
+tc.onStatusChange(w=>{wallet=w;const a=w&&w.account&&w.account.address;$('#wAddr').textContent=a?'Connected: '+a.slice(0,6)+'…'+a.slice(-6):'No wallet connected.';draw();if(a&&tg&&tg.initData)api('/api/wallet/link',{address:a}).catch(()=>{})})}catch(e){}
 
 /* activation: pays 0.1 TON with a unique comment, then the server checks the chain */
 function commentBoc(t){const b=new TextEncoder().encode(t),d=[0,0,0,0,...b],c=[0,d.length*2,...d];return btoa(String.fromCharCode(0xb5,0xee,0x9c,0x72,1,1,1,1,0,c.length,0,...c))}
@@ -180,6 +200,7 @@ $('#chList').onclick=e=>{const b=e.target.closest('button');if(!b)return;const i
   if(b.dataset.s==='join'){tg?tg.openTelegramLink(D.config.channels[i]):open(D.config.channels[i]);b.dataset.s='claim';b.textContent='Claim'}
   else run(()=>api('/api/task/channel',{index:i}),'Reward added')};
 
+$('#ciBtn').onclick=()=>run(()=>api('/api/checkin',{}),'Daily reward claimed ✓');
 /* boost */
 const bAmt=$('#bAmt');
 $$('.chips button').forEach(c=>c.onclick=()=>{bAmt.value=c.dataset.a==='max'?Math.floor(live()):c.dataset.a;draw()});bAmt.oninput=draw;
@@ -200,8 +221,15 @@ function draw(){
   const a=+bAmt.value;$('#bPv').textContent=a>0?`+${fmt(a/1000*c.boostPer1k,1)} NEX/day → ${fmt(D.rate+a/1000*c.boostPer1k)} NEX/day`:'Enter an amount';
   $('#pTot').textContent=D.refs.total;$('#pAct').textContent=D.refs.active;$('#pLv').textContent=D.level;
   $('#adRw').textContent=c.adReward;$('#adInfo').textContent=`${D.ads.count}/${D.ads.limit} today`;$('#adBtn').disabled=D.ads.count>=D.ads.limit;
-  $('#chList').innerHTML=c.channels.map((_,i)=>`<div class="task row"><div class="ico">➤</div><div><b>Join channel ${i+1}</b><br><span class="rw">+${c.channelReward} NEX</span></div>${D.channelsDone[i]?'<span class="done">✓</span>':`<button class="sm" data-i="${i}" data-s="join">Join</button>`}</div>`).join('');
+  $('#chList').innerHTML=c.channels.map((_,i)=>`<div class="tk"><div class="ico">➤</div><div><b>Join channel ${i+1}</b><br><span class="rw">+${c.channelReward} NEX</span></div>${D.channelsDone[i]?'<span class="done">✓</span>':`<button class="sm" data-i="${i}" data-s="join">Join</button>`}</div>`).join('');
   $('#wHist').innerHTML=D.withdrawals.map(w=>`<div><span>${fmt(w.amount)} NEX · ${new Date(w.created_at*1000).toLocaleDateString()}</span><span class="tag">${w.status}</span></div>`).join('');
+  const ci=D.checkin,cyc=ci.doneToday?((ci.streak-1)%7)+1:ci.streak%7;
+  $('#days').innerHTML=ci.rewards.map((r,i)=>`<div class="day ${i<cyc?'ok':''} ${!ci.doneToday&&i===cyc?'now':''} ${i===6?'last':''}"><small>D${i+1}</small><b>+${r}</b>${i<cyc?'✓':''}</div>`).join('');
+  $('#streak').textContent='🔥 '+ci.streak;$('#ciBtn').disabled=ci.doneToday;$('#ciBtn').textContent=ci.doneToday?'CHECKED IN ✓':'CLAIM TODAY';
+  $('#tOpen').textContent=((ci.doneToday?0:1)+(D.ads.count<D.ads.limit?1:0)+D.channelsDone.filter(x=>!x).length)+' open';
+  $('#wSpd').textContent=fmt(D.rate);$('#wFr').textContent=D.refs.active;
+  [['#k1',!!(wallet&&wallet.account)],['#k2',act],['#k3',live()>=c.minWithdraw]].forEach(([s,v])=>{$(s).className='dot'+(v?' ok':'');$(s).textContent=v?'✓':'•'});
+  if(!D.withdrawals.length)$('#wHist').innerHTML='<p class="mu tiny">No withdrawals yet.</p>';
 }
 setInterval(()=>{if(!D)return;const v=live();$('#bal').textContent=fmt(v,4);$('#wbal').textContent=fmt(v,2)},100);
 setInterval(()=>{if(D&&!document.hidden)load()},60000);
