@@ -22,16 +22,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders() });
-    if (url.pathname === "/api/health") {
-      return json({
-        ok: true,
-        app: "NEXORA",
-        hasBotToken: Boolean(env.TELEGRAM_BOT_TOKEN),
-        hasPayAddress: Boolean(env.PAY_ADDRESS),
-        hasTonKey: Boolean(env.TONCENTER_API_KEY),
-        hasDb: Boolean(env.DB)
-      });
-    }
+    if (url.pathname === "/api/health") return json({ ok: true, app: "NEXORA", hasBotToken: Boolean(env.TELEGRAM_BOT_TOKEN), hasPayAddress: Boolean(env.PAY_ADDRESS), hasTonKey: Boolean(env.TONCENTER_API_KEY), hasDb: Boolean(env.DB) });
     if (url.pathname === "/api/telegram/webhook" && request.method === "POST") return handleTelegramWebhook(request, env);
     if (!url.pathname.startsWith("/api/")) return env.ASSETS.fetch(request);
 
@@ -50,6 +41,7 @@ export default {
       if (p === "/api/task/ad/claim" && m === "POST") return adClaim(env, id, C);
       if (p === "/api/task/channel" && m === "POST") return channelClaim(request, env, id, C);
       if (p === "/api/withdraw" && m === "POST") return withdraw(request, env, id, C);
+      if (p === "/api/checkin" && m === "POST") return checkin(env, id, C);
       return json({ error: "Not found" }, 404);
     } catch (e) {
       return json({ error: "Server error" }, 500);
@@ -82,8 +74,10 @@ async function state(env, id, C) {
   const keys = (done.results || []).map(r => r.task_key);
   const wd = await env.DB.prepare("SELECT amount, status, created_at FROM withdrawals WHERE telegram_id = ? ORDER BY id DESC LIMIT 5").bind(id).all();
   const today = new Date().toISOString().slice(0, 10);
+  const ci = await checkinInfo(env, id);
   return {
     user: publicUser(u),
+    checkin: ci,
     balance: liveBalance(u, C),
     rate: rateOf(u, C),
     level: 1 + Math.floor((u.boost_spent || 0) / 5000),
@@ -279,4 +273,24 @@ async function handleTelegramWebhook(request, env) {
     });
   }
   return json({ ok: true });
+}
+
+/* ---------- daily check-in (7-day cycle, resets if a day is missed) ---------- */
+const CHECKIN_REWARDS = [50, 60, 70, 80, 90, 100, 200];
+const dayStr = (off = 0) => new Date(Date.now() - off * 864e5).toISOString().slice(0, 10);
+async function checkinInfo(env, id) {
+  const r = await env.DB.prepare("SELECT task_key FROM tasks_done WHERE telegram_id = ? AND task_key LIKE 'checkin_%' ORDER BY task_key DESC LIMIT 60").bind(id).all();
+  const days = new Set((r.results || []).map(x => x.task_key.slice(8)));
+  const doneToday = days.has(dayStr(0));
+  let streak = 0, o = doneToday ? 0 : 1;
+  while (days.has(dayStr(o))) { streak++; o++; }
+  return { streak, doneToday, rewards: CHECKIN_REWARDS };
+}
+async function checkin(env, id, C) {
+  const ins = await env.DB.prepare("INSERT OR IGNORE INTO tasks_done (telegram_id, task_key, created_at) VALUES (?, ?, ?)").bind(id, "checkin_" + dayStr(0), now()).run();
+  if (!ins.meta.changes) return json({ error: "Already checked in today" }, 400);
+  const ci = await checkinInfo(env, id);
+  const reward = CHECKIN_REWARDS[(ci.streak - 1) % 7];
+  await env.DB.prepare("UPDATE users SET balance_nex = balance_nex + ? WHERE telegram_id = ?").bind(reward, id).run();
+  return json(await state(env, id, C));
 }
