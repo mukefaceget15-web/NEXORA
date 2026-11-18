@@ -1,4 +1,4 @@
-7d231ee9-c10d-4970-a01d-9bd6e8f3f6cf
+
 name = "nexora-miniapp"
 main = "src/index.js"
 compatibility_date = "2026-11-17"
@@ -18,5 +18,5 @@ database_id = "7d231ee9-c10d-4970-a01d-9bd6e8f3f6cf"
 APP_NAME = "NEXORA"
 MINING_DAILY_RATE = "320"
 PAY_ADDRESS = "UQCgsuIkpTRmJUHHhqFtD9-2Ybi-5wLjXMaCkcIy8QVQYEn-"
-CHANNEL_1 = "@کانال_اول"
-CHANNEL_2 = "@کانال_دوم"
+CHANNEL_1 = ""
+CHANNEL_2 = ""
